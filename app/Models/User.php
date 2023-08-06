@@ -31,4 +31,9 @@ class User extends Authenticatable
     {
         return asset($this->image);
     } //end of retreving image directly
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    } // end of team
 }

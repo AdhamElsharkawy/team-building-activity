@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('seos', function (Blueprint $table) {
+        Schema::create('teams', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable();
-            $table->text('description')->nullable();
-            $table->text('keywords')->nullable();
-            $table->string('image')->nullable();
+            $table->string('name');
+            $table->string('image')->default('assets/images/team.png');
+            $table->string('color')->default('#000000');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('seos');
+        Schema::dropIfExists('teams');
     }
 };
