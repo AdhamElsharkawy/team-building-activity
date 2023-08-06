@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('seos', function (Blueprint $table) {
+        Schema::create('teams_levels', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable();
-            $table->text('description')->nullable();
-            $table->text('keywords')->nullable();
-            $table->string('image')->nullable();
+            $table->foreignId('team_id')->constrained('teams')->onDelete('cascade');
+            $table->foreignId('level_id')->constrained('levels')->onDelete('cascade');
+            $table->bigInteger('score')->default(0);
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('seos');
+        Schema::dropIfExists('teams_levels');
     }
 };

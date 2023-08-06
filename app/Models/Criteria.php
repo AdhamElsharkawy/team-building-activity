@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Translatable\HasTranslations;
 
-class Seo extends Model
+class Criteria extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = [];
 
+    public function evaluations()
+    {
+        return $this->belongsTo(Evaluation::class);
+    } // end of evaluations
 }

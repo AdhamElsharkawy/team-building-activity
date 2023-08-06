@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('home_pages', function (Blueprint $table) {
+        Schema::create('levels', function (Blueprint $table) {
             $table->id();
-            $table->string('hero_title')->nullable();
-            $table->string('hero_image')->nullable();
-            $table->text('hero_description')->nullable();
+            $table->string('name');
+            $table->integer('order')->default(0);
+            $table->string('type')->only(['score', 'evaluation']);
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('home_pages');
+        Schema::dropIfExists('levels');
     }
 };
