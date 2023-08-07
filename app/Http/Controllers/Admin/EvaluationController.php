@@ -14,7 +14,8 @@ class EvaluationController extends Controller
      */
     public function index()
     {
-        //
+        // $evaluations = Evaluation::with('criteria')->get();
+        // return ['evaluations' => $evaluations];
     }
 
     /**
