@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -18,7 +19,8 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        return ['users' => User::where('email', '!=', 'super_admin@app.com')->latest()->get()];
+        $teams = Team::all();
+        return ['users' => User::where('email', '!=', 'super_admin@app.com')->with('team')->latest()->get(), 'teams' => $teams];
     } //end of index
 
     public function store(StoreUserRequest $request)
@@ -50,11 +52,14 @@ class UserController extends Controller
 
         //image uploading
         if ($request->image) {
-            $user->image ? $this->deleteImg($user->image) : '';
+            // check if user image is  user.png
+            $user->image != 'assets/images/user.png' ? $this->deleteImg($user->image) : '';
             $form_data['image'] = $this->img($request->image, 'images/users/');
+            // $form_data['image'] = $this->img($request->image, 'images/users/');
         } else {
             $form_data['image'] = $user->image;
         }
+
         $user->update($form_data);
 
         return response()->json(['message' => __('User Updated Successfully')]);

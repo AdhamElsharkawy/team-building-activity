@@ -27,8 +27,9 @@ class StoreUserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'in:user,admin'],
+            'role' => ['required', 'in:user,admin,captin'],
             'image' => ['nullable', 'mimes:jpeg,jpg,png,gif', 'image'],
+            'team_id' => ['required', 'exists:teams,id'],
         ];
     }
 }

@@ -80,6 +80,20 @@
         </Column>
 
         <Column
+            field="team.name"
+            :header="$t('Team')"
+            :sortable="true"
+            headerStyle="width:14%; min-width:14rem;"
+            :class="{ 'text-right': $store.getters['isRtl'] }"
+        >
+            <template #body="slotProps">
+                <span class="p-column-title">team</span>
+                {{ slotProps.data.team?.name }}
+            </template>
+        </Column>
+
+
+        <Column
             field="role"
             :header="$t('role')"
             :sortable="true"

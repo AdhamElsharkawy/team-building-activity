@@ -71,7 +71,7 @@
                 >{{ $t("role") }}</label
             >
             <div class="formgrid grid">
-                <div class="field-radiobutton col-6">
+                <div class="field-radiobutton col-4">
                     <RadioButton
                         id="role1"
                         name="role"
@@ -80,7 +80,7 @@
                     />
                     <label for="role1">{{ $t("admin") }}</label>
                 </div>
-                <div class="field-radiobutton col-6">
+                <div class="field-radiobutton col-4">
                     <RadioButton
                         id="role2"
                         name="role"
@@ -89,8 +89,27 @@
                     />
                     <label for="role2">{{ $t("user") }}</label>
                 </div>
+                <div class="field-radiobutton col-4">
+                    <RadioButton
+                        id="role3"
+                        name="role"
+                        value="captin"
+                        v-model="user.role"
+                    />
+                    <label for="role3">{{ $t("Captin") }}</label>
+                </div>
             </div>
         </div>
+        <div class="field">
+            <label
+                for="departments"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+            >Team</label
+            >
+            <Dropdown v-model="selectedOption" :options="allTeams" optionLabel="name"
+                      placeholder="Select Team" class="w-full md:w-14rem"/>
+        </div>
+
         <div class="field">
             <label
                 for="password"
@@ -176,10 +195,12 @@ import { useToast } from "primevue/usetoast";
 
 export default {
     emits: ["userCreated"],
+    props:["allTeams"],
 
     data() {
         return {
             newUserDialog: false,
+            selectedOption: null,
             user: {
                 name: "",
                 email: "",
@@ -203,10 +224,12 @@ export default {
             this.user.image = this.$refs.fileUploader.files[0];
         }, //end of uploadImage
         createUser() {
+
             this.submitted = true;
             if (
                 this.user.name &&
                 this.user.name.trim() &&
+                this.selectedOption &&
                 this.user.email &&
                 this.user.password &&
                 this.user.password_confirmation
@@ -216,6 +239,7 @@ export default {
                 for (let key in this.user) {
                     formData.append(key, this.user[key]);
                 }
+                formData.append("team_id", this.selectedOption.id);
                 axios
                     .post("/api/admin/users", formData, {
                         headers: {
