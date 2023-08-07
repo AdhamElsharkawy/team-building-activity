@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,5 +17,7 @@ use Illuminate\Support\Facades\Route;
 require __DIR__ . '/auth.php';
 
 Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
-    // write your public APIs here
+    // user apis
+    Route::get("users", [UserController::class, 'index'])->name('users');
+    Route::get("users/{user}", [UserController::class, 'show'])->name('users.show');
 });
