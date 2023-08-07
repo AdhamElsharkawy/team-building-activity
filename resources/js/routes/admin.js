@@ -6,6 +6,7 @@ const admin = [
         name: "admin.dashboard",
         component: () => import("../pages/admin/dashboard/DashboardPage.vue"),
     },
+
     // users
     {
         name: "admin.users",
@@ -25,6 +26,27 @@ const admin = [
         component: () => import("../pages/admin/users/edit/EditUser.vue"),
         props: true,
     },
+    
+    // teams
+    {
+        name: "admin.teams",
+        path: "teams",
+        component: () => import("../pages/admin/teams/index/TeamPage.vue"),
+        props: true,
+    },
+    {
+        name: "admin.teams.create",
+        path: "teams/add",
+        component: () => import("../pages/admin/teams/create/CreateTeam.vue"),
+        props: true,
+    },
+    {
+        name: "admin.teams.edit",
+        path: "teams/edit",
+        component: () => import("../pages/admin/teams/edit/EditTeam.vue"),
+        props: true,
+    },
+
     //settings
     {
         name: "admin.settings",

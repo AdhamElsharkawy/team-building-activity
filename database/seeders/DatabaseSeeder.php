@@ -13,9 +13,6 @@ class DatabaseSeeder extends Seeder
             TeamSeeder::class,
             UserSeeder::class,
             LevelSeeder::class,
-            TeamLevelSeeder::class,
-            EvaluationSeeder::class,
-            CriteriaSeeder::class,
             InformationSeeder::class,
         ]);
     }

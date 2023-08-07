@@ -11,6 +11,21 @@ class Team extends Model
 
     protected $guarded = [];
 
+    protected $appends = [
+        'image_path',
+        'score',
+    ];
+
+    public function getImagePathAttribute()
+    {
+        return asset($this->image);
+    } // end of getImagePathAttribute
+
+    public function getScoreAttribute()
+    {
+        return $this->levels()->sum('score');
+    } // end of getScoreAttribute
+
     public function users()
     {
         return $this->hasMany(User::class);
@@ -18,6 +33,6 @@ class Team extends Model
 
     public function levels()
     {
-        return $this->belongsToMany(Level::class)->withPivot('id', 'score');
+        return $this->belongsToMany(Level::class, 'teams_levels')->withPivot('id', 'score');
     } // end of levels
 }
