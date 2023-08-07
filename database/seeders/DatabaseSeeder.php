@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             TeamLevelSeeder::class,
             EvaluationSeeder::class,
             CriteriaSeeder::class,
+            InformationSeeder::class,
         ]);
     }
 }
