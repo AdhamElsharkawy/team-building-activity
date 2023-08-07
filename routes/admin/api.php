@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EvaluationController;
 use App\Http\Controllers\Admin\SeoController;
 use App\Http\Controllers\Admin\TeamController;
 
@@ -17,6 +18,9 @@ Route::group(['middleware' => ['admin:sanctum'], 'as' => 'admin.'], function () 
     // teams
     Route::resource('teams', TeamController::class);
     Route::delete('teams/delete/all', [TeamController::class, 'destroyAll']);
-    // seos
+    //Evaluation
+    Route::resource('evaluations', EvaluationController::class)->except(['show', 'create']);
+    Route::delete('evaluations/delete/all', [EvaluationController::class, 'destroyAll']);
+    //seos
     Route::resource('seos', SeoController::class)->only(['index', 'update']);
 });

@@ -14,6 +14,23 @@
             class="mt-0 mx-auto mb-5 block shadow-2"
         />
 
+        <div class="field text-center">
+            <div class="p-inputgroup">
+                <div class="custom-file">
+                    <FileUpload
+                        mode="basic"
+                        accept="image/*"
+                        customUpload
+                        :maxFileSize="2048000"
+                        :chooseLabel="$t('chooseImage')"
+                        @change="uploadImage"
+                        ref="fileUploader"
+                        class="m-0"
+                    />
+                </div>
+            </div>
+        </div>
+
         <div class="field">
             <label
                 for="name"
@@ -64,7 +81,7 @@
                 >{{ $t("role") }}</label
             >
             <div class="formgrid grid">
-                <div class="field-radiobutton col-6">
+                <div class="field-radiobutton col-4">
                     <RadioButton
                         id="role1"
                         name="role"
@@ -73,7 +90,7 @@
                     />
                     <label for="role1">{{ $t("admin") }}</label>
                 </div>
-                <div class="field-radiobutton col-6">
+                <div class="field-radiobutton col-4">
                     <RadioButton
                         id="role2"
                         name="role"
@@ -82,7 +99,31 @@
                     />
                     <label for="role2">{{ $t("user") }}</label>
                 </div>
+                <div class="field-radiobutton col-4">
+                    <RadioButton
+                        id="role3"
+                        name="role"
+                        value="captin"
+                        v-model="user.role"
+                    />
+                    <label for="role3">{{ $t("Captin") }}</label>
+                </div>
             </div>
+        </div>
+
+        <div class="field">
+            <label
+                for="departments"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+            >Department</label
+            >
+            <Dropdown
+                v-model="selectedOption"
+                :options="allTeams"
+                optionLabel="name"
+                placeholder="Select Team"
+                class="w-full md:w-14rem"
+            />
         </div>
 
         <template #footer>
@@ -112,14 +153,20 @@
 import { useToast } from "primevue/usetoast";
 
 export default {
+    props: ["allTeams"],
     data() {
         return {
             user: {},
             userDialog: false,
             submitted: false,
+            selectedOption: null,
         };
     },
     methods: {
+        uploadImage() {
+            if (!this.$refs.fileUploader.files[0]) return;
+            this.user.image = this.$refs.fileUploader.files[0];
+        }, //end of uploadImage
         updateUser() {
             this.submitted = true;
 
@@ -129,6 +176,10 @@ export default {
                 formData.append("name", this.user.name);
                 formData.append("email", this.user.email);
                 formData.append("role", this.user.role);
+                formData.append("team_id", this.selectedOption.id);
+                if (typeof this.user.image == "object") {
+                    formData.append("image", this.user.image);
+                }
                 formData.append("_method", "PUT");
                 axios
                     .post("/api/admin/users/" + this.user.id, formData)
@@ -165,6 +216,7 @@ export default {
         openDialog(user) {
             this.user = user;
             this.userDialog = true;
+            this.selectedOption = this.user.team;
         }, //end of openDialog
 
         hideDialog() {
