@@ -11,6 +11,15 @@ class Level extends Model
 
     protected $guarded = [];
 
+    protected $appends = [
+        'type',
+    ];
+
+    public function getTypeAttribute()
+    {
+        return $this->evaluations()->exists() ? 'evaluation' : 'score';
+    } // end of getTypeAttribute
+
     public function evaluations()
     {
         return $this->hasMany(Evaluation::class);
@@ -18,6 +27,6 @@ class Level extends Model
 
     public function teams()
     {
-        return $this->belongsToMany(Team::class)->withPivot('id', 'score');
+        return $this->belongsToMany(Team::class, 'teams_levels')->withPivot('id', 'score');
     } // end of teams
 }

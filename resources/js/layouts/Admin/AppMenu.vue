@@ -22,9 +22,15 @@ const model = ref([
         items: [
             {
                 label: $t('users'),
-                icon: "pi pi-users",
+                icon: "pi pi-user",
                 to: "/admin/users",
                 name: "admin.users",
+            },
+            {
+                label: $t('teams'),
+                icon: "pi pi-users",
+                to: "/admin/teams",
+                name: "admin.teams",
             },
         ],
     },

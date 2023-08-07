@@ -19,7 +19,7 @@ class LevelFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'order' => $this->faker->unique()->numberBetween(1, 10),
-            'type' => $this->faker->randomElement(['score', 'evaluation']),
+            // 'type' => $this->faker->randomElement(['score', 'evaluation']),
         ];
     }
 }

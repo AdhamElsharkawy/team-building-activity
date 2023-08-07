@@ -11,7 +11,7 @@ class Criteria extends Model
 
     protected $guarded = [];
 
-    public function evaluations()
+    public function evaluation()
     {
         return $this->belongsTo(Evaluation::class);
     } // end of evaluations

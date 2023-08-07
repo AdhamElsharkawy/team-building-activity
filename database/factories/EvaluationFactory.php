@@ -18,7 +18,6 @@ class EvaluationFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'level_id' => $this->faker->numberBetween(1, 10),
         ];
     }
 }
