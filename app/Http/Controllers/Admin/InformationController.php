@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\StoreInformationRequest;
-use App\Http\Requests\UpdateInformationRequest;
 use App\Models\Information;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Information\StoreInformationRequest;
+use App\Http\Requests\Admin\Information\UpdateInformationRequest;
 
 class InformationController extends Controller
 {
