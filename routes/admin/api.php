@@ -18,7 +18,6 @@ Route::group(['middleware' => ['admin:sanctum'], 'as' => 'admin.'], function () 
     // teams
     Route::resource('teams', TeamController::class);
     Route::delete('teams/delete/all', [TeamController::class, 'destroyAll']);
-    
     //Evaluation
     Route::resource('evaluations', EvaluationController::class)->except(['show', 'create']);
     Route::delete('evaluations/delete/all', [EvaluationController::class, 'destroyAll']);
