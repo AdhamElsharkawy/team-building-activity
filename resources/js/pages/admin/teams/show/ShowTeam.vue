@@ -1,18 +1,35 @@
 <template>
     <Dialog
         v-model:visible="teamDialog"
-        :style="{ width: '450px' }"
-        :header="$t('showTeam')"
+        :header="'Team ' + team.name"
         :modal="true"
-        class="p-fluid"
+        class="p-fluid w-full m-5"
     >
-        <img
-            :src="team.image_path"
-            :alt="team.image"
-            v-if="team.image"
-            width="150"
-            class="mt-0 mx-auto mb-5 block shadow-2"
-        />
+        <div class="flex flex-col md:flex-row justify-content-center w-full">
+            <div class="flex flex-col md:flex-row">
+                <img
+                    :src="team.image_path"
+                    :alt="team.image"
+                    v-if="team.image"
+                    width="150"
+                    class="mt-0 mb-5 block shadow-2"
+                />
+                <div>
+                    <h3 class="text-lg font-bold">Members</h3>
+                    <ul class="flex flex-row">
+                        <li
+                            v-for="member in team.users"
+                            :key="member.id"
+                            class="text-base"
+                        >
+                            {{ member.name }}
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <div></div>
+        </div>
 
         <template #footer>
             <div

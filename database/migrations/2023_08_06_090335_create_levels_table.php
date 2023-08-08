@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('order')->default(0);
+            $table->string('color')->default('#000000');
             // $table->string('type')->only(['score', 'evaluation']);
             $table->timestamps();
         });
