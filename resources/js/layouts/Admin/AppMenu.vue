@@ -21,13 +21,13 @@ const model = ref([
         label: $t('collections'),
         items: [
             {
-                label: $t('users'),
+                label: "users",
                 icon: "pi pi-user",
                 to: "/admin/users",
                 name: "admin.users",
             },
             {
-                label: $t('teams'),
+                label: "teams",
                 icon: "pi pi-users",
                 to: "/admin/teams",
                 name: "admin.teams",

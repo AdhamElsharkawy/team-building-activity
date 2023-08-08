@@ -32,4 +32,9 @@ export default {
         font-family: "primeicons" !important;
     }
 }
+.flex-col {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
 </style>

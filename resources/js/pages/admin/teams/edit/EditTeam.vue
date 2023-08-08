@@ -2,7 +2,7 @@
     <Dialog
         v-model:visible="teamDialog"
         :style="{ width: '450px' }"
-        :header="$t('editTeam')"
+        header="Edit Team"
         :modal="true"
         class="p-fluid"
     >
@@ -15,10 +15,8 @@
         />
 
         <div class="field">
-            <label
-                for="name"
-                :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("name") }}</label
+            <label for="name" :class="[{ 'float-right': $store.getters.isRtl }]"
+                >Name</label
             >
             <InputText
                 id="name"
@@ -31,16 +29,16 @@
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !team.name">{{
-                $t("nameIsRequired")
-            }}</small>
+            <small class="p-invalid" v-if="submitted && !team.name">
+                Name Is Required
+            </small>
         </div>
 
         <div class="field">
             <label
                 for="color"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("color") }}</label
+                >Color</label
             >
             <InputText
                 id="color"
@@ -52,16 +50,16 @@
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !team.color">{{
-                $t("colorIsRequired")
-            }}</small>
+            <small class="p-invalid" v-if="submitted && !team.color">
+                Color Is Required
+            </small>
         </div>
 
         <div class="field">
             <label
                 for="selectUsers"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("selectUsers") }}</label
+                >Select Users</label
             >
 
             <MultiSelect
@@ -69,7 +67,7 @@
                 display="chip"
                 :options="users"
                 optionLabel="name"
-                :placeholder="$t('selectUsers')"
+                placeholder="Select Users"
                 class="w-full"
             />
         </div>
@@ -81,13 +79,13 @@
                 }"
             >
                 <Button
-                    :label="$t('cancel')"
+                    label="Cancel"
                     icon="pi pi-times"
                     class="p-button-text"
                     @click="hideDialog"
                 />
                 <Button
-                    :label="$t('submit')"
+                    label="Submit"
                     icon="pi pi-check"
                     class="p-button-text"
                     @click="updateTeam"
@@ -120,7 +118,7 @@ export default {
                 formData.append("name", this.team.name);
                 formData.append("color", this.team.color);
                 formData.append("_method", "PUT");
-                
+
                 axios
                     .post("/api/admin/teams/" + this.team.id, formData)
                     .then((response) => {

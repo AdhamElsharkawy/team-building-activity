@@ -3,7 +3,7 @@
     <Dialog
         v-model:visible="newUserDialog"
         :style="{ width: '450px' }"
-        :header="$t('newUser')"
+        header="New User"
         :modal="true"
         class="p-fluid"
     >
@@ -15,7 +15,7 @@
                         accept="image/*"
                         customUpload
                         :maxFileSize="2048000"
-                        :chooseLabel="$t('chooseImage')"
+                        chooseLabel="Choose Image"
                         @change="uploadImage"
                         ref="fileUploader"
                         class="m-0"
@@ -24,10 +24,8 @@
             </div>
         </div>
         <div class="field">
-            <label
-                for="name"
-                :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("name") }}</label
+            <label for="name" :class="[{ 'float-right': $store.getters.isRtl }]"
+                >Name</label
             >
             <InputText
                 id="name"
@@ -40,15 +38,15 @@
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !user.name">{{
-                $t("nameIsRequired")
-            }}</small>
+            <small class="p-invalid" v-if="submitted && !user.name"
+                >Name Is Required</small
+            >
         </div>
         <div class="field">
             <label
                 for="email"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("email") }}</label
+                >Email"</label
             >
             <InputText
                 id="email"
@@ -60,15 +58,15 @@
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !user.email">{{
-                $t("emailIsRequired")
-            }}</small>
+            <small class="p-invalid" v-if="submitted && !user.email"
+                >Email Is Required
+            </small>
         </div>
         <div class="field">
             <label
                 class="mb-3"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("role") }}</label
+                >Role</label
             >
             <div class="formgrid grid">
                 <div class="field-radiobutton col-4">
@@ -78,16 +76,16 @@
                         value="admin"
                         v-model="user.role"
                     />
-                    <label for="role1">{{ $t("admin") }}</label>
+                    <label for="role1">Admin"</label>
                 </div>
                 <div class="field-radiobutton col-4">
                     <RadioButton
                         id="role2"
                         name="role"
-                        value="user"
+                        value="member"
                         v-model="user.role"
                     />
-                    <label for="role2">{{ $t("user") }}</label>
+                    <label for="role2">Member</label>
                 </div>
                 <div class="field-radiobutton col-4">
                     <RadioButton
@@ -96,7 +94,7 @@
                         value="captin"
                         v-model="user.role"
                     />
-                    <label for="role3">{{ $t("Captin") }}</label>
+                    <label for="role3">Captin</label>
                 </div>
             </div>
         </div>
@@ -104,17 +102,22 @@
             <label
                 for="departments"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-            >Team</label
+                >Team</label
             >
-            <Dropdown v-model="selectedOption" :options="allTeams" optionLabel="name"
-                      placeholder="Select Team" class="w-full md:w-14rem"/>
+            <Dropdown
+                v-model="selectedOption"
+                :options="allTeams"
+                optionLabel="name"
+                placeholder="Select Team"
+                class="w-full md:w-14rem"
+            />
         </div>
 
         <div class="field">
             <label
                 for="password"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("password") }}</label
+                >Password</label
             >
             <InputText
                 id="password"
@@ -131,15 +134,15 @@
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !user.password">{{
-                $t("passwordIsRequired")
-            }}</small>
+            <small class="p-invalid" v-if="submitted && !user.password">
+                PasswordIsRequired
+            </small>
         </div>
         <div class="field">
             <label
                 for="password_confirmation"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("passwordConfirmation") }}</label
+                >Password Confirmation</label
             >
             <InputText
                 id="password_confirmation"
@@ -159,12 +162,12 @@
             <small
                 class="p-invalid"
                 v-if="submitted && !user.password_confirmation"
-                >{{ $t("passwordConfirmationIsRequired") }}</small
+                >Password Confirmation Is Required"</small
             >
             <small
                 class="p-invalid"
                 v-if="submitted && user.password_confirmation !== user.password"
-                >{{ $t("passwordConfirmationMustMatchPassword") }}</small
+                >Password Confirmation Must Match Password</small
             >
         </div>
 
@@ -175,13 +178,13 @@
                 }"
             >
                 <Button
-                    :label="$t('cancel')"
+                    label="Cancel"
                     icon="pi pi-times"
                     class="p-button-text"
                     @click="hideDialog"
                 />
                 <Button
-                    :label="$t('submit')"
+                    label="Submit"
                     icon="pi pi-check"
                     class="p-button-text"
                     @click="createUser"
@@ -195,7 +198,7 @@ import { useToast } from "primevue/usetoast";
 
 export default {
     emits: ["userCreated"],
-    props:["allTeams"],
+    props: ["allTeams"],
 
     data() {
         return {
@@ -224,7 +227,6 @@ export default {
             this.user.image = this.$refs.fileUploader.files[0];
         }, //end of uploadImage
         createUser() {
-
             this.submitted = true;
             if (
                 this.user.name &&
