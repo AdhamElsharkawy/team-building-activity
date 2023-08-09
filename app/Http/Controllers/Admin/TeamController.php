@@ -117,15 +117,14 @@ class TeamController extends Controller
     /**
      * Remove the specified resources from storage.
      */
-    public function destroyAll(Request $request)
+    public function destroyMany(Request $request)
     {
+        $request->validate(['teams' => 'required|array|min:1|exists:teams,id']);
         $teams = Team::whereIn('id', $request->teams)->get();
         foreach ($teams as $team) {
             $team->image != 'assets/images/team.png' ? $this->deleteImg($team->image) : '';
-            // $team->users()->delete();
-            $team->delete();
         }
-
+        $teams->delete();
         return response()->json(['message' => __('Teams Deleted Successfully')]);
     } // end of destroyAll
 }

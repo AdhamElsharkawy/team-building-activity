@@ -135,7 +135,7 @@ export default {
         deleteSelectedTeams() {
             this.loading = true;
             axios
-                .delete("/api/admin/teams/delete/all", {
+                .delete("/api/admin/teams/delete/many", {
                     data: {
                         teams: this.selectedTeams.map((val) => val.id),
                     },

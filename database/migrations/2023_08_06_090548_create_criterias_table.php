@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('score')->default(0);
             $table->integer('weight')->default(1);
             $table->integer('order')->default(0);
-            $table->string('type')->only(['percentage', 'number']);
+            $table->string('type')->only(['percentage', 'number'])->default('percentage');
 
             $table->foreignId('evaluation_id')->constrained('evaluations')->onDelete('cascade');
 
