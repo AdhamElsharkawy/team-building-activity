@@ -129,7 +129,7 @@ export default {
         deleteSelectedUsers() {
             this.loading = true;
             axios
-                .delete("/api/admin/users/delete/all", {
+                .delete("/api/admin/users/delete/many", {
                     data: {
                         users: this.selectedUsers.map((val) => val.id),
                     },
