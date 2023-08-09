@@ -19,7 +19,7 @@ class CriteriaFactory extends Factory
         return [
             'name' => $this->faker->name(),
             'order' => $this->faker->unique()->numberBetween(1, 999999999),
-            'type' => $this->faker->randomElement(['percentage', 'number']),
+            'type' => 'percentage'
         ];
     }
 }

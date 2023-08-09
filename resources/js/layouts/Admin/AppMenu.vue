@@ -32,6 +32,12 @@ const model = ref([
                 to: "/admin/teams",
                 name: "admin.teams",
             },
+            {
+                label: "levels",
+                icon: "pi pi-qrcode",
+                to: "/admin/levels",
+                name: "admin.levels",
+            }
         ],
     },
     {

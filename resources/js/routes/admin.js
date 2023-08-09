@@ -14,19 +14,7 @@ const admin = [
         component: () => import("../pages/admin/users/index/UserPage.vue"),
         props: true,
     },
-    {
-        name: "admin.users.create",
-        path: "users/add",
-        component: () => import("../pages/admin/users/create/CreateUser.vue"),
-        props: true,
-    },
-    {
-        name: "admin.users.edit",
-        path: "users/edit",
-        component: () => import("../pages/admin/users/edit/EditUser.vue"),
-        props: true,
-    },
-    
+
     // teams
     {
         name: "admin.teams",
@@ -34,16 +22,12 @@ const admin = [
         component: () => import("../pages/admin/teams/index/TeamPage.vue"),
         props: true,
     },
+
+    // levels
     {
-        name: "admin.teams.create",
-        path: "teams/add",
-        component: () => import("../pages/admin/teams/create/CreateTeam.vue"),
-        props: true,
-    },
-    {
-        name: "admin.teams.edit",
-        path: "teams/edit",
-        component: () => import("../pages/admin/teams/edit/EditTeam.vue"),
+        name: "admin.levels",
+        path: "levels",
+        component: () => import("../pages/admin/levels/index/LevelPage.vue"),
         props: true,
     },
 
