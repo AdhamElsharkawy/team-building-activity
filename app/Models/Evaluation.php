@@ -10,6 +10,11 @@ class Evaluation extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'laravel_through_key'
+    ];
 
     public function criteria()
     {

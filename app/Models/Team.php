@@ -11,6 +11,12 @@ class Team extends Model
 
     protected $guarded = [];
 
+    // hide
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     protected $appends = [
         'image_path',
         'score',
@@ -35,4 +41,8 @@ class Team extends Model
     {
         return $this->belongsToMany(Level::class, 'teams_levels')->withPivot('id', 'score');
     } // end of levels
+
+    public function evaluations() {
+        return $this->hasManyThrough(Evaluation::class, Level::class , 'id' , 'id');
+      } // end of evaluations
 }
