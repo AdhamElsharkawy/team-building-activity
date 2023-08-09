@@ -144,6 +144,12 @@ export default {
             });
     }, //end of mounted
 
+    watch: {
+        selectedUsers() {
+            console.log(this.selectedUsers);
+        },
+    },
+
     methods: {
         uploadImage() {
             if (!this.$refs.fileUploader.files[0]) return;

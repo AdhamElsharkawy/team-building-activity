@@ -17,10 +17,9 @@ class UserController extends Controller
 
     private $paginate_users = 10;
 
-    public function index(Request $request)
+    public function index()
     {
-        $teams = Team::all();
-        return ['users' => User::where('email', '!=', 'super_admin@app.com')->with('team')->latest()->get(), 'teams' => $teams];
+        return ['users' => User::where('email', '!=', 'super_admin@app.com')->with('team')->latest()->get()];
     } //end of index
 
     public function store(StoreUserRequest $request)

@@ -58,12 +58,11 @@
                     @deleteUser="fill"
                 ></user-list>
 
-                <edit-user :allTeams="allTeams" ref="editUserComponent"></edit-user>
+                <edit-user ref="editUserComponent"></edit-user>
 
                 <create-user
                     ref="createUserComponent"
                     @userCreated="fill"
-                    :allTeams="allTeams"
                 ></create-user>
 
                 <Dialog
@@ -118,7 +117,6 @@ export default {
             loading: false,
             isEmpty: false,
             errors: null,
-            allTeams: [],
         };
     }, //end of data
 
@@ -178,7 +176,6 @@ export default {
                 .get("/api/admin/users")
                 .then((response) => {
                     this.currentUsers = response.data.users;
-                    this.allTeams = response.data.teams;
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;

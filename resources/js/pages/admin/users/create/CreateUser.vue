@@ -98,21 +98,7 @@
                 </div>
             </div>
         </div>
-        <div class="field">
-            <label
-                for="departments"
-                :class="[{ 'float-right': $store.getters.isRtl }]"
-                >Team</label
-            >
-            <Dropdown
-                v-model="selectedOption"
-                :options="allTeams"
-                optionLabel="name"
-                placeholder="Select Team"
-                class="w-full md:w-14rem"
-            />
-        </div>
-
+        
         <div class="field">
             <label
                 for="password"
@@ -198,12 +184,10 @@ import { useToast } from "primevue/usetoast";
 
 export default {
     emits: ["userCreated"],
-    props: ["allTeams"],
 
     data() {
         return {
             newUserDialog: false,
-            selectedOption: null,
             user: {
                 name: "",
                 email: "",
@@ -231,7 +215,6 @@ export default {
             if (
                 this.user.name &&
                 this.user.name.trim() &&
-                this.selectedOption &&
                 this.user.email &&
                 this.user.password &&
                 this.user.password_confirmation
@@ -241,7 +224,6 @@ export default {
                 for (let key in this.user) {
                     formData.append(key, this.user[key]);
                 }
-                formData.append("team_id", this.selectedOption.id);
                 axios
                     .post("/api/admin/users", formData, {
                         headers: {

@@ -111,21 +111,6 @@
             </div>
         </div>
 
-        <div class="field">
-            <label
-                for="departments"
-                :class="[{ 'float-right': $store.getters.isRtl }]"
-            >Department</label
-            >
-            <Dropdown
-                v-model="selectedOption"
-                :options="allTeams"
-                optionLabel="name"
-                placeholder="Select Team"
-                class="w-full md:w-14rem"
-            />
-        </div>
-
         <template #footer>
             <div
                 :class="{
@@ -153,13 +138,11 @@
 import { useToast } from "primevue/usetoast";
 
 export default {
-    props: ["allTeams"],
     data() {
         return {
             user: {},
             userDialog: false,
             submitted: false,
-            selectedOption: null,
         };
     },
     methods: {
@@ -176,7 +159,6 @@ export default {
                 formData.append("name", this.user.name);
                 formData.append("email", this.user.email);
                 formData.append("role", this.user.role);
-                formData.append("team_id", this.selectedOption.id);
                 if (typeof this.user.image == "object") {
                     formData.append("image", this.user.image);
                 }
@@ -216,7 +198,6 @@ export default {
         openDialog(user) {
             this.user = user;
             this.userDialog = true;
-            this.selectedOption = this.user.team;
         }, //end of openDialog
 
         hideDialog() {

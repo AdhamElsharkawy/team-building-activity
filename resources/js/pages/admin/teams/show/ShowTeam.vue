@@ -5,7 +5,7 @@
         v-model:visible="teamDialog"
         :header="'Team ' + team.name"
         :modal="true"
-        class="p-fluid w-full m-5"
+        class="p-fluid"
     >
         <div class="flex flex-col w-full">
             <div class="flex flex-col md:flex-row my-5">

@@ -72,7 +72,7 @@ class TeamController extends Controller
      */
     public function edit(Team $team)
     {
-        return response()->json(['team' => $team, 'users' => User::latest()->get()]);
+        return response()->json(['team' => $team->load('users'), 'users' => User::latest()->get()]);
     } // end of edit
 
     /**

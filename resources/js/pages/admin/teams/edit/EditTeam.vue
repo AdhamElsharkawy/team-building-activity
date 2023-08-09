@@ -107,16 +107,19 @@ export default {
             teamDialog: false,
             submitted: false,
         };
-    },
+    }, //end of data
+
     methods: {
         updateTeam() {
             this.submitted = true;
-
-            if (this.team.name && this.team.name.trim() && this.team.color) {
+            if (this.team.name && this.team.name.trim() && this.team.color && this.selectedUsers) {
                 this.loading = true;
                 const formData = new FormData();
                 formData.append("name", this.team.name);
                 formData.append("color", this.team.color);
+                for (let i = 0; i < this.selectedUsers.length; i++) {
+                    formData.append("user_ids[]", this.selectedUsers[i].id);
+                }
                 formData.append("_method", "PUT");
 
                 axios
@@ -151,8 +154,24 @@ export default {
             this.teamDialog = true;
         }, //end of editTeam
 
-        openDialog(team) {
-            this.team = team;
+        async openDialog(team) {
+            await axios
+                .get("/api/admin/teams/" + team.id + "/edit")
+                .then((response) => {
+                    this.users = response.data.users;
+                    this.team = response.data.team;
+                    this.selectedUsers = this.team.users;
+                })
+                .catch((errors) => {
+                    if (errors.response) {
+                        this.toast.add({
+                            severity: "error",
+                            summary: "Error",
+                            detail: errors.response.data.message,
+                            life: 15000,
+                        });
+                    }
+                });
             this.teamDialog = true;
         }, //end of openDialog
 
