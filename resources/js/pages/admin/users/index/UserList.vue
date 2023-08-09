@@ -18,12 +18,12 @@
                 class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
                 :class="{ 'md:flex-row-reverse': $store.getters['isRtl'] }"
             >
-                <h5 class="m-0">{{ $t("manage") + " " + $t("users") }}</h5>
+                <h5 class="m-0">Manage Users</h5>
                 <span class="block mt-2 md:mt-0 p-input-icon-left">
                     <i class="pi pi-search" />
                     <InputText
                         v-model="filters['global'].value"
-                        :placeholder="$t('search')"
+                        placeholder="search"
                         :class="{ 'text-right': $store.getters['isRtl'] }"
                     />
                 </span>
@@ -38,7 +38,7 @@
 
         <Column
             field="name"
-            :header="$t('name')"
+            header="name"
             :sortable="true"
             headerStyle="width:14%; min-width:10rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
@@ -51,7 +51,7 @@
 
         <Column
             field="image"
-            :header="$t('image')"
+            header="image"
             headerStyle="width:14%; min-width:10rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
         >
@@ -68,7 +68,7 @@
 
         <Column
             field="email"
-            :header="$t('email')"
+            header="email"
             :sortable="true"
             headerStyle="width:14%; min-width:14rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
@@ -81,7 +81,7 @@
 
         <Column
             field="team.name"
-            :header="$t('Team')"
+            header="Team"
             :sortable="true"
             headerStyle="width:14%; min-width:14rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
@@ -95,7 +95,7 @@
 
         <Column
             field="role"
-            :header="$t('role')"
+            header="role"
             :sortable="true"
             headerStyle="width:14%; min-width:14rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
@@ -108,7 +108,7 @@
 
         <Column
             field="action"
-            :header="$t('actions')"
+            header="actions"
             headerStyle="min-width:10rem;display: flex; justify-content: center;"
             class="text-center"
         >

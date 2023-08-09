@@ -28,7 +28,6 @@ class UpdateUserRequest extends FormRequest
             'password' => ['string', 'confirmed'],
             'image' => ['nullable', 'mimes:jpeg,jpg,png,gif', 'image'],
             'role' => ['required', 'in:user,admin,captin'],
-            'team_id' => ['required', 'exists:teams,id'],
         ];
     }
 }

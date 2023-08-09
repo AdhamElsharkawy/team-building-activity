@@ -2,7 +2,7 @@
     <Dialog
         v-model:visible="teamDialog"
         :style="{ width: '450px' }"
-        :header="$t('editTeam')"
+        header="Edit Team"
         :modal="true"
         class="p-fluid"
     >
@@ -15,10 +15,8 @@
         />
 
         <div class="field">
-            <label
-                for="name"
-                :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("name") }}</label
+            <label for="name" :class="[{ 'float-right': $store.getters.isRtl }]"
+                >Name</label
             >
             <InputText
                 id="name"
@@ -31,16 +29,16 @@
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !team.name">{{
-                $t("nameIsRequired")
-            }}</small>
+            <small class="p-invalid" v-if="submitted && !team.name">
+                Name Is Required
+            </small>
         </div>
 
         <div class="field">
             <label
                 for="color"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("color") }}</label
+                >Color</label
             >
             <InputText
                 id="color"
@@ -52,16 +50,16 @@
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !team.color">{{
-                $t("colorIsRequired")
-            }}</small>
+            <small class="p-invalid" v-if="submitted && !team.color">
+                Color Is Required
+            </small>
         </div>
 
         <div class="field">
             <label
                 for="selectUsers"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("selectUsers") }}</label
+                >Select Users</label
             >
 
             <MultiSelect
@@ -69,7 +67,7 @@
                 display="chip"
                 :options="users"
                 optionLabel="name"
-                :placeholder="$t('selectUsers')"
+                placeholder="Select Users"
                 class="w-full"
             />
         </div>
@@ -81,13 +79,13 @@
                 }"
             >
                 <Button
-                    :label="$t('cancel')"
+                    label="Cancel"
                     icon="pi pi-times"
                     class="p-button-text"
                     @click="hideDialog"
                 />
                 <Button
-                    :label="$t('submit')"
+                    label="Submit"
                     icon="pi pi-check"
                     class="p-button-text"
                     @click="updateTeam"
@@ -109,18 +107,21 @@ export default {
             teamDialog: false,
             submitted: false,
         };
-    },
+    }, //end of data
+
     methods: {
         updateTeam() {
             this.submitted = true;
-
-            if (this.team.name && this.team.name.trim() && this.team.color) {
+            if (this.team.name && this.team.name.trim() && this.team.color && this.selectedUsers) {
                 this.loading = true;
                 const formData = new FormData();
                 formData.append("name", this.team.name);
                 formData.append("color", this.team.color);
+                for (let i = 0; i < this.selectedUsers.length; i++) {
+                    formData.append("user_ids[]", this.selectedUsers[i].id);
+                }
                 formData.append("_method", "PUT");
-                
+
                 axios
                     .post("/api/admin/teams/" + this.team.id, formData)
                     .then((response) => {
@@ -153,8 +154,24 @@ export default {
             this.teamDialog = true;
         }, //end of editTeam
 
-        openDialog(team) {
-            this.team = team;
+        async openDialog(team) {
+            await axios
+                .get("/api/admin/teams/" + team.id + "/edit")
+                .then((response) => {
+                    this.users = response.data.users;
+                    this.team = response.data.team;
+                    this.selectedUsers = this.team.users;
+                })
+                .catch((errors) => {
+                    if (errors.response) {
+                        this.toast.add({
+                            severity: "error",
+                            summary: "Error",
+                            detail: errors.response.data.message,
+                            life: 15000,
+                        });
+                    }
+                });
             this.teamDialog = true;
         }, //end of openDialog
 
