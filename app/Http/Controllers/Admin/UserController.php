@@ -79,7 +79,7 @@ class UserController extends Controller
         foreach ($users as $user) {
             $user->image != 'assets/images/user.png' ? $this->deleteImg($user->image) : '';
         }
-        $users->delete();
+        User::whereIn('id', $request->users)->delete();
         return response()->json(['message' => __('Users Deleted Successfully')]);
     } //end of destroyAll
 }

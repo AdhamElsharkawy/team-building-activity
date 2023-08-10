@@ -22,6 +22,9 @@
                     />
                 </div>
             </div>
+            <small class="p-invalid text-red-600" v-if="submitted && !team.image">
+                Image Is Required
+            </small>
         </div>
         <div class="field">
             <label for="name" :class="[{ 'float-right': $store.getters.isRtl }]"
