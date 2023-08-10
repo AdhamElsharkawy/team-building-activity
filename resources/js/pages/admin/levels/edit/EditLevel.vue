@@ -4,38 +4,11 @@
         :style="{ width: '450px' }"
         header="Edit Level"
         :modal="true"
-        class="p-fluid"
+        class="p-fluid min-w-max"
     >
-        <img
-            :src="level.image_path"
-            :alt="level.image"
-            v-if="level.image"
-            width="150"
-            class="mt-0 mx-auto mb-5 block shadow-2"
-        />
-
-        <div class="field text-center">
-            <div class="p-inputgroup">
-                <div class="custom-file">
-                    <FileUpload
-                        mode="basic"
-                        accept="image/*"
-                        customUpload
-                        :maxFileSize="2048000"
-                        chooseLabel="Choose Image"
-                        @change="uploadImage"
-                        ref="fileUploader"
-                        class="m-0"
-                    />
-                </div>
-            </div>
-        </div>
-
         <div class="field">
-            <label
-                for="name"
-                :class="[{ 'float-right': $store.getters.isRtl }]"
-                >name</label
+            <label for="name" :class="[{ 'float-right': $store.getters.isRtl }]"
+                >Name</label
             >
             <InputText
                 id="name"
@@ -48,69 +21,233 @@
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !level.name">{{
-                nameIsRequired
-            }}</small>
+            <small class="p-invalid" v-if="submitted && !level.name"
+                >Name Is Required</small
+            >
         </div>
 
         <div class="field">
             <label
-                for="email"
+                for="color"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >email</label
+                >Color</label
             >
             <InputText
-                id="email"
-                v-model.trim="level.email"
+                id="color"
+                v-model.trim="level.color"
                 required="true"
-                type="email"
+                type="color"
                 :class="[
-                    { 'p-invalid': submitted && !level.email },
+                    { 'p-invalid': submitted && !level.color },
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !level.email">
-                emailIsRequired
+            <small class="p-invalid" v-if="submitted && !level.color"
+                >Email Is Required
             </small>
+        </div>
+
+        <div class="field">
+            <label
+                for="order"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+                >Order</label
+            >
+            <InputText
+                id="order"
+                v-model.trim="level.order"
+                required="true"
+                type="number"
+                :class="[{ 'text-right': $store.getters.isRtl }]"
+            />
         </div>
 
         <div class="field">
             <label
                 class="mb-3"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >role</label
+                >Type</label
             >
             <div class="formgrid grid">
                 <div class="field-radiobutton col-4">
                     <RadioButton
-                        id="role1"
-                        name="role"
-                        value="admin"
-                        v-model="level.role"
+                        id="type1"
+                        name="type"
+                        value="score"
+                        v-model="level.type"
                     />
-                    <label for="role1">admin</label>
+                    <label for="type1">Score</label>
                 </div>
                 <div class="field-radiobutton col-4">
                     <RadioButton
-                        id="role2"
-                        name="role"
-                        value="member"
-                        v-model="level.role"
+                        id="type2"
+                        name="type"
+                        value="evaluation"
+                        v-model="level.type"
                     />
-                    <label for="role2">Member</label>
-                </div>
-                <div class="field-radiobutton col-4">
-                    <RadioButton
-                        id="role3"
-                        name="role"
-                        value="captin"
-                        v-model="level.role"
-                    />
-                    <label for="role3">Captin</label>
+                    <label for="type2">Evaluation</label>
                 </div>
             </div>
         </div>
 
+        <div v-if="level.type == 'evaluation'">
+            <div class="field">
+                <label
+                    for="evaluationList"
+                    :class="[{ 'float-right': $store.getters.isRtl }]"
+                    >Evaluation List</label
+                >
+
+                <div
+                    v-for="(evaluation, index) in level.evaluations"
+                    :key="index"
+                >
+                    <div class="flex gap-3 mb-3">
+                        <div class="flex-1">
+                            <InputText
+                                id="evaluationList"
+                                v-model.trim="evaluation.name"
+                                required="true"
+                                type="text"
+                                style="height: 44px"
+                                placeholder="Evaluation Name"
+                                :class="[
+                                    {
+                                        'p-invalid':
+                                            submitted && !evaluation.name,
+                                    },
+                                    { 'text-right': $store.getters.isRtl },
+                                ]"
+                            />
+                            <Button
+                                v-if="index != 0"
+                                @click="level.evaluations.splice(index, 1)"
+                                icon="pi pi-trash"
+                                class="p-button p-button-text p-button-outlined mt-3"
+                                label="Remove Evaluation"
+                                severity="danger"
+                                type="button"
+                            />
+                        </div>
+                        <div>
+                            <div
+                                class="field"
+                                v-for="(criteria, index) in evaluation.criteria"
+                                :key="index"
+                            >
+                                <div class="flex gap-2">
+                                    <InputText
+                                        id="criteriaName"
+                                        v-model.trim="criteria.name"
+                                        required="true"
+                                        type="text"
+                                        placeholder="Criteria Name"
+                                        :class="[
+                                            {
+                                                'p-invalid':
+                                                    submitted && !criteria.name,
+                                            },
+                                            {
+                                                'text-right':
+                                                    $store.getters.isRtl,
+                                            },
+                                        ]"
+                                    />
+                                    <InputText
+                                        id="criteriaWeight"
+                                        v-model.trim="criteria.weight"
+                                        required="true"
+                                        type="number"
+                                        placeholder="Weight"
+                                        :class="[
+                                            {
+                                                'p-invalid':
+                                                    submitted &&
+                                                    !criteria.weight,
+                                            },
+                                            {
+                                                'text-right':
+                                                    $store.getters.isRtl,
+                                            },
+                                        ]"
+                                    />
+                                    <span class="flex align-items-center"
+                                        >%</span
+                                    >
+                                    <InputText
+                                        id="criteriaOrder"
+                                        v-model.trim="criteria.order"
+                                        required="true"
+                                        type="number"
+                                        placeholder="Order"
+                                        :class="[
+                                            {
+                                                'p-invalid':
+                                                    submitted &&
+                                                    !criteria.order,
+                                            },
+                                            {
+                                                'text-right':
+                                                    $store.getters.isRtl,
+                                            },
+                                        ]"
+                                    />
+                                    <Button
+                                        v-if="index != 0"
+                                        @click="
+                                            evaluation.criteria.splice(index, 1)
+                                        "
+                                        icon="pi pi-trash"
+                                        class="p-button p-button-text p-button-outlined px-5"
+                                        severity="danger"
+                                        type="button"
+                                    />
+                                </div>
+                                <small
+                                    class="p-invalid"
+                                    v-if="submitted && !criteria.name"
+                                    >Criteria Name Is Required</small
+                                >
+                            </div>
+                            <Button
+                                class="p-button p-button-text p-button-outlined"
+                                label="Add Criteria"
+                                icon="pi pi-plus"
+                                type="button"
+                                @click="
+                                    evaluation.criteria.push({
+                                        name: '',
+                                        weight: '',
+                                        order: '',
+                                    })
+                                "
+                            />
+                        </div>
+                    </div>
+
+                    <Divider v-if="index != level.evaluations.length - 1" />
+                </div>
+
+                <Button
+                    class="p-button p-button-text p-button-outlined"
+                    label="Add Evaluation"
+                    icon="pi pi-plus"
+                    type="button"
+                    @click="
+                        level.evaluations.push({
+                            name: '',
+                            criteria: [
+                                {
+                                    name: '',
+                                    weight: '',
+                                    order: '',
+                                },
+                            ],
+                        })
+                    "
+                />
+            </div>
+        </div>
         <template #footer>
             <div
                 :class="{
@@ -140,28 +277,73 @@ import { useToast } from "primevue/usetoast";
 export default {
     data() {
         return {
-            level: {},
+            level: {
+                name: "",
+                color: "",
+                type: "",
+                order: "",
+                evaluations: [
+                    {
+                        name: "",
+                        criteria: [
+                            {
+                                name: "",
+                                weight: "",
+                                order: "",
+                            },
+                        ],
+                    },
+                ],
+            },
             levelDialog: false,
             submitted: false,
         };
-    },
+    }, //end of data
+
     methods: {
-        uploadImage() {
-            if (!this.$refs.fileUploader.files[0]) return;
-            this.level.image = this.$refs.fileUploader.files[0];
-        }, //end of uploadImage
         updateLevel() {
             this.submitted = true;
 
-            if (this.level.name && this.level.name.trim() && this.level.email) {
+            if (
+                this.level.name &&
+                this.level.name.trim() &&
+                this.level.color &&
+                this.level.type &&
+                this.level.order
+            ) {
                 this.loading = true;
                 const formData = new FormData();
-                formData.append("name", this.level.name);
-                formData.append("email", this.level.email);
-                formData.append("role", this.level.role);
-                if (typeof this.level.image == "object") {
-                    formData.append("image", this.level.image);
+
+                for (let key in this.level) {
+                    if (key != "evaluations") {
+                        formData.append(key, this.level[key]);
+                    } else {
+                        for (let evaluation_key in this.level.evaluations) {
+                            for (let criteria_key in this.level.evaluations[
+                                evaluation_key
+                            ].criteria) {
+                                for (let criteria in this.level.evaluations[
+                                    evaluation_key
+                                ].criteria[criteria_key]) {
+                                    formData.append(
+                                        `evaluations[${evaluation_key}][criteria][${criteria_key}][${criteria}]`,
+                                        this.level.evaluations[evaluation_key]
+                                            .criteria[criteria_key][criteria]
+                                    );
+                                }
+                            }
+                            formData.append(
+                                `evaluations[${evaluation_key}][name]`,
+                                this.level.evaluations[evaluation_key].name
+                            );
+                            formData.append(
+                                `evaluations[${evaluation_key}][id]`,
+                                this.level.evaluations[evaluation_key].id
+                            );
+                        }
+                    }
                 }
+
                 formData.append("_method", "PUT");
                 axios
                     .post("/api/admin/levels/" + this.level.id, formData)
@@ -196,7 +378,23 @@ export default {
         }, //end of editLevel
 
         openDialog(level) {
-            this.level = level;
+            this.loading = true;
+            axios
+                .get("/api/admin/levels/" + level.id + "/edit")
+                .then((response) => {
+                    this.level = { ...response.data.level };
+                })
+                .catch((errors) => {
+                    if (errors.response) {
+                        this.toast.add({
+                            severity: "error",
+                            summary: "Error",
+                            detail: errors.response.data.message,
+                            life: 15000,
+                        });
+                    }
+                });
+            this.loading = false;
             this.levelDialog = true;
         }, //end of openDialog
 

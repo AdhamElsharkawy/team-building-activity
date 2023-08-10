@@ -122,18 +122,19 @@ class LevelController extends Controller
     private function updateEvaluations($request, $level)
     {
         $evaluations_form_data = $request->evaluations;
+        $level->evaluations()->delete();
         foreach ($evaluations_form_data as $evaluation_form_data) {
-            $evaluation = $level->evaluations()->updateOrCreate([
-                'id' => $evaluation_form_data['id'],
-            ], [
+            $evaluation = $level->evaluations()->create([
                 'name' => $evaluation_form_data['name'],
             ]);
 
             $criteria_form_data = $evaluation_form_data['criteria'];
             foreach ($criteria_form_data as $criterion_form_data) {
-                $evaluation->criteria()->updateOrCreate([
-                    'id' => $criterion_form_data['id'],
-                ], $criterion_form_data);
+                $evaluation->criteria()->create([
+                    'name' => $criterion_form_data['name'],
+                    'weight' => $criterion_form_data['weight'],
+                    'order' => $criterion_form_data['order'],
+                ]);
             }
         }
     } // end of updateEvaluations
