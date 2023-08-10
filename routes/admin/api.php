@@ -20,7 +20,7 @@ Route::group(['middleware' => ['admin:sanctum'], 'as' => 'admin.'], function () 
     Route::delete('teams/delete/many', [TeamController::class, 'destroyMany'])->name('teams.destroy.many');
     // levels
     Route::resource('levels', LevelController::class)->except(['show', 'create']);
-    Route::put('levels/delete/many', [LevelController::class, 'destroyMany'])->name('levels.destroy.many');
+    Route::delete('levels/delete/many', [LevelController::class, 'destroyMany'])->name('levels.destroy.many');
     //seos
     Route::resource('seos', SeoController::class)->only(['index', 'update']);
 });
