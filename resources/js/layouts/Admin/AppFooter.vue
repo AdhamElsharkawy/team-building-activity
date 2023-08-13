@@ -10,7 +10,7 @@ const changeLanguage = (lang) => {
 };
 
 const logoUrl = computed(() => {
-    return `../${layoutConfig.darkTheme.value ? "Logo" : "Logo"}.svg`;
+    return `../${layoutConfig.darkTheme.value ? "Logo-white":"Logo"}.svg`;
 });
 </script>
 
