@@ -21,7 +21,7 @@ export default {
     computed: {
         logoUrl() {
             const { layoutConfig } = useLayout();
-            return `../${layoutConfig.darkTheme.value ? "Logo" : "Logo"}.svg`;
+            return `../${layoutConfig.darkTheme.value ? "Logo-white":"Logo"}.svg`;
         },
     }, //end of computed
 
