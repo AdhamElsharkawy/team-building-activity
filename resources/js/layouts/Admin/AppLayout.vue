@@ -61,9 +61,9 @@ export default {
             if (store.getters["isRtl"]) {
                 return {
                     "layout-theme-light":
-                        layoutConfig.darkTheme.value === "light",
+                        layoutConfig.darkTheme.value,
                     "layout-theme-dark":
-                        layoutConfig.darkTheme.value === "dark",
+                        layoutConfig.darkTheme.value,
                     "layout-overlay": layoutConfig.menuMode.value === "overlay",
                     "layout-static": layoutConfig.menuMode.value === "static",
                     "layout-static-inactive layout-static-inactive-rtl":
@@ -80,8 +80,8 @@ export default {
                 };
             }
             return {
-                "layout-theme-light": layoutConfig.darkTheme.value === "light",
-                "layout-theme-dark": layoutConfig.darkTheme.value === "dark",
+                "layout-theme-light": layoutConfig.darkTheme.value,
+                "layout-theme-dark": layoutConfig.darkTheme.value,
                 "layout-overlay": layoutConfig.menuMode.value === "overlay",
                 "layout-static": layoutConfig.menuMode.value === "static",
                 "layout-static-inactive":
