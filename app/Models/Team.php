@@ -42,7 +42,8 @@ class Team extends Model
         return $this->belongsToMany(Level::class, 'teams_levels')->withPivot('id', 'score');
     } // end of levels
 
-    public function evaluations() {
-        return $this->hasManyThrough(Evaluation::class, Level::class , 'id' , 'id');
-      } // end of evaluations
+    public function evaluations()
+    {
+        return $this->hasManyThrough(Evaluation::class, Level::class, 'id', 'level_id', 'id', 'id');
+    } // end of evaluations
 }
