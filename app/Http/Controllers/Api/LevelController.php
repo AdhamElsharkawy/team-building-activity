@@ -3,15 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Seo;
-use App\Models\Team;
 use App\Models\Level;
 use App\Models\Criteria;
-use App\Models\Evaluation;
 use Illuminate\Http\Request;
 use App\Http\Traits\SeoTrait;
 use App\Http\Traits\GeneralTrait;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Team;
 
 class LevelController extends Controller
 {
@@ -19,7 +17,8 @@ class LevelController extends Controller
 
     public function index()
     {
-        $levels = Level::with('teams.evaluations.criteria')->orderBy('order')->latest()->get();
+        $levels = Level::with('evaluations.criteria')->orderBy('order')->latest()->get();
+
         $levels->makeHidden(["created_at", "updated_at"]);
         $seo = Seo::first();
         return $this->apiSuccessResponse(
@@ -27,16 +26,35 @@ class LevelController extends Controller
             $this->seo('Users', 'home-page', $seo->description, $seo->keywords),
             'Levels retreived successfully',
         );
-    }
+    } // end of index
+
+    public function show($id)
+    {
+        // many to many relationship
+        $teams = Team::whereHas('levels', function ($query) use ($id) {
+            $query->where('level_id', $id);
+        })->with(['evaluations' => function ($query) use ($id) {
+            $query->where('level_id', $id)->with('criteria');
+        }])->get();
+        // hide image
+        $teams->makeHidden(["image"]);
+
+        $seo = Seo::first();
+        return $this->apiSuccessResponse(
+            ["teams" => $teams],
+            $this->seo('Teams', 'home-page', $seo->description, $seo->keywords),
+            'Teams retreived successfully',
+        );
+    } // end of show
 
     public function updateTeamScore(Request $request, $id)
     {
-        $level = Level::where('id',$id)->with('evaluations', 'teams')->first();
+        $level = Level::where('id', $id)->with('evaluations', 'teams')->first();
         // $level = Level::find($id)->load('evaluations', 'teams');
         if (!$level) return response()->json(["status" => "error", "message" => "Level not found"], 404);
         // suppose request->teams is array of team ids and score of each team in that level
 
-        if ($request->type == 'score') {          
+        if ($request->type == 'score') {
             foreach ($request->teams as $team) {
                 // validation on score
                 if ($team['score'] < 0 || $team['score'] > 500) {
@@ -81,7 +99,7 @@ class LevelController extends Controller
                 // dd($score);
                 $avgScore = $score / $evaluationCount;
                 // Update pivot table
-                
+
                 $level->teams()
                     ->updateExistingPivot($teamId, ['score' => $avgScore]);
 
