@@ -28,25 +28,6 @@ class LevelController extends Controller
         );
     } // end of index
 
-    public function show($id)
-    {
-        // many to many relationship
-        $teams = Team::whereHas('levels', function ($query) use ($id) {
-            $query->where('level_id', $id);
-        })->with(['evaluations' => function ($query) use ($id) {
-            $query->where('level_id', $id)->with('criteria');
-        }])->get();
-        // hide image
-        $teams->makeHidden(["image"]);
-
-        $seo = Seo::first();
-        return $this->apiSuccessResponse(
-            ["teams" => $teams],
-            $this->seo('Teams', 'home-page', $seo->description, $seo->keywords),
-            'Teams retreived successfully',
-        );
-    } // end of show
-
     public function updateTeamScore(Request $request, $id)
     {
         $level = Level::where('id', $id)->with('evaluations', 'teams')->first();
