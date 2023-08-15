@@ -16,12 +16,8 @@ class LevelController extends Controller
      */
     public function index()
     {
-        $levels = Level::with('teams')->orderBy('order')->get();
-        // get the average score for each level
-        $levels->map(function ($level) {
-            $level->average_score = $level->teams->avg('pivot.score');
-            return $level;
-        });
+        $levels = Level::orderBy('order')->get();
+       
         return response()->json([
             'levels' => $levels,
         ]);
