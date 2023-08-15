@@ -16,16 +16,27 @@ class Criteria extends Model
     ];
 
     protected $appends = [
-        'calculated_score',
+        'score',
     ];
+
+    public function getScoreAttribute()
+    {
+        $teams = $this->teams()->get();
+        if ($teams->count() == 0) return 0;
+        $score = 0;
+        foreach ($teams as $team) {
+            $score += $team->pivot->score;
+        }
+        return $score;
+    } // end of getScoreAttribute
 
     public function evaluation()
     {
         return $this->belongsTo(Evaluation::class);
     } // end of evaluations
 
-    public function getCalculatedScoreAttribute()
+    public function teams()
     {
-        return $this->type == 'percentage' ? $this->score * $this->weight / 100 : $this->score;
-    } // end of getCalculatedScoreAttribute
+        return $this->belongsToMany(Team::class, 'teams_criterias')->withPivot('id', 'score');
+    } // end of teams
 }
