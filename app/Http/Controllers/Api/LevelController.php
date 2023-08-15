@@ -18,13 +18,8 @@ class LevelController extends Controller
     {
         $levels = Level::with('evaluations.criteria')->orderBy('order')->get();
 
-        $levels->makeHidden(["order", "created_at", "updated_at"]);
-        $levels->each(function ($level) {
-            $level->evaluations->makeHidden(["level_id", "created_at", "updated_at"]);
-            $level->evaluations->each(function ($evaluation) {
-                $evaluation->criteria->makeHidden(["evaluation_id", "created_at", "updated_at"]);
-            });
-        });
+        $levels = $this->hideLevelsUnnecessaryData($levels);
+
         $seo = Seo::first();
         return $this->apiSuccessResponse(
             ["levels" => $levels],
@@ -33,17 +28,23 @@ class LevelController extends Controller
         );
     } // end of index
 
+    private function hideLevelsUnnecessaryData($levels)
+    {
+        $levels->makeHidden(["order", "created_at", "updated_at"]);
+        $levels->each(function ($level) {
+            $level->evaluations->makeHidden(["level_id", "created_at", "updated_at"]);
+            $level->evaluations->each(function ($evaluation) {
+                $evaluation->criteria->makeHidden(["evaluation_id", "created_at", "updated_at"]);
+            });
+        });
+        return $levels;
+    } // end of hideLevelsUnnecessaryData
+
     public function show($id)
     {
         $level = Level::with('evaluations.criteria')->find($id);
         if (!$level) return response()->json(["status" => "error", "message" => "Level not found"], 404);
-
-        $level->makeHidden(["created_at", "updated_at"]);
-        $level->evaluations->makeHidden(["level_id", "created_at", "updated_at"]);
-        $level->evaluations->each(function ($evaluation) {
-            $evaluation->criteria->makeHidden(["evaluation_id", "created_at", "updated_at"]);
-        });
-
+        $level = $this->hideLevelUnnecessaryData($level);
         $seo = Seo::first();
         return $this->apiSuccessResponse(
             ["level" => $level],
@@ -52,7 +53,33 @@ class LevelController extends Controller
         );
     } // end of show
 
+    private function hideLevelUnnecessaryData($level)
+    {
+        $level->makeHidden(["order", "created_at", "updated_at"]);
+        $level->evaluations->makeHidden(["level_id", "created_at", "updated_at"]);
+        $level->evaluations->each(function ($evaluation) {
+            $evaluation->criteria->makeHidden(["evaluation_id", "created_at", "updated_at"]);
+        });
+        return $level;
+    } // end of hideLevelUnnecessaryData
+
     public function update(Request $request)
+    {
+        $validator = $this->validateUpdateLevel($request);
+        if ($validator) return $validator;
+
+        $level = Level::find($request->level_id);
+        if ($this->submitTeamsLevel($request->teams, $level)) return $this->submitTeamsLevel($request->teams, $level);
+
+        $seo = Seo::first();
+        return $this->apiSuccessResponse(
+            ['level' => $level->load('evaluations.criteria')],
+            $this->seo('Users', 'home-page', $seo->description, $seo->keywords),
+            'level updated successfully',
+        );
+    } // end of update
+
+    private function validateUpdateLevel($request)
     {
         $validator = $this->apiValidationTrait($request->all(), [
             'level_id' => 'required|exists:levels,id',
@@ -65,18 +92,17 @@ class LevelController extends Controller
             'teams.*.evaluations.*.criteria.*.id' => 'required|exists:criterias,id',
             'teams.*.evaluations.*.criteria.*.score' => 'required|numeric|min:0|max:5',
         ]);
-        if ($validator) return $validator;
+        return $validator;
+    } // end of validateUpdateLevel
 
-        $level = Level::find($request->level_id);
-        if (!$level) return response()->json(["status" => "error", "message" => "Level not found"], 404);
-
-        $teams = $request->teams;
+    private function submitTeamsLevel($teams, $level)
+    {
         foreach ($teams as $team_index => $team) {
             $team = Team::find($team['id']);
             if (!$team) return response()->json(["status" => "error", "message" => "Team not found"], 404);
-            if (isset($teams[$team_index]['score'])) {
+            if ($level->type == 'score' && isset($teams[$team_index]['score'])) {
                 $level->teams()->updateExistingPivot($team->id, ['score' => $teams[$team_index]['score']]);
-            } else {
+            } else if ($level->type == 'evaluation' && isset($teams[$team_index]['evaluations'])) {
                 $evaluations = $teams[$team_index]['evaluations'];
                 $score = 0;
                 foreach ($evaluations as $evaluation_index => $evaluation) {
@@ -93,14 +119,9 @@ class LevelController extends Controller
                     $score += $evaluation_score;
                 }
                 $level->teams()->updateExistingPivot($team->id, ['score' => $score]);
+            } else {
+                return response()->json(["status" => "error", "message" => "Invalid data, debuging: check the level type or you may sent inapproprate data that is not compatible with the level type"], 422);
             }
         }
-
-        $seo = Seo::first();
-        return $this->apiSuccessResponse(
-            ['level' => $level->load('evaluations.criteria')],
-            $this->seo('Users', 'home-page', $seo->description, $seo->keywords),
-            'level updated successfully',
-        );
-    }
+    } // end of submitTeamsLevel
 }

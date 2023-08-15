@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Team;
 use App\Http\Traits\GeneralTrait;
 use App\Http\Traits\SeoTrait;
@@ -15,10 +14,10 @@ class TeamController extends Controller
 
     public function index()
     {
-        $teams = Team::select('id', 'name', 'image', 'color')->get();
-        // hide unnecessary data
+        // order by the score in the pivot table with levels
+        $teams = Team::select('id', 'name', 'image', 'color')->withCount('levels')->get();
         $teams->makeHidden(["created_at", "updated_at", "image"]);
-
+        $teams = $teams->sortByDesc('score')->values()->all();
         $seo = Seo::first();
         return $this->apiSuccessResponse(
             ["teams" => $teams],
@@ -29,19 +28,19 @@ class TeamController extends Controller
 
     public function show($id)
     {
-        $team = Team::with('levels.evaluations.criteria')->find($id);
+        $team = Team::with(['levels' => function ($q) use ($id) {
+            $q->with(['evaluations' => function ($q) use ($id) {
+                $q->with(['criteria' => function ($q) use ($id) {
+                    $q->with(['teams' => function ($q) use ($id) {
+                        $q->where('team_id', $id);
+                    }]);
+                }]);
+            }]);
+        }])->find($id);
+
         if (!$team) return response()->json(["status" => "error", "message" => "Team not found"], 404);
 
-        // load team critera score from the pivot
-
-
-        // hide unnecessary data
-        $team->makeHidden(["created_at", "updated_at", "image"]);
-        $team->levels->makeHidden(["pivot", "created_at", "updated_at"]);
-        $team->levels->first()->evaluations->makeHidden(["level_id"]);
-        $team->levels->first()->evaluations->each(function ($evaluation) {
-            $evaluation->criteria->makeHidden(["evaluation_id"]);
-        });
+        $team = $this->hideTeamUnnecessaryData($team);
 
         $seo = Seo::first();
         return $this->apiSuccessResponse(
@@ -50,6 +49,27 @@ class TeamController extends Controller
             'Teams retreived successfully',
         );
     } // end of show
+
+    private function hideTeamUnnecessaryData($team)
+    {
+        $team->makeHidden(["image"]);
+        $team->levels->makeHidden(["pivot", "created_at", "updated_at"]);
+        $team->levels->each(function ($level) {
+            $level->evaluations->each(function ($evaluation) {
+                $evaluation->makeHidden(["level_id", "created_at", "updated_at"]);
+                $evaluation->criteria->makeHidden(["evaluation_id"]);
+                $evaluation->criteria->each(function ($criteria) {
+                    // append the first team score to the criteria
+                    if ($criteria->teams->count() > 0) {
+                        $criteria->score = $criteria->teams->first()->pivot->score;
+                        $criteria->calculated_score = $criteria->score * $criteria->weight / 100;
+                        $criteria->makeHidden(["teams"]);
+                    }
+                });
+            });
+        });
+        return $team;
+    } // end of hideTeamUnnecessaryData
 
     public function showLevel($id, $level_id)
     {
@@ -62,21 +82,11 @@ class TeamController extends Controller
                 }]);
             }]);
         }])->find($id);
+
         if (!$team) return response()->json(["status" => "error", "message" => "Team not found"], 404);
 
         // hide unnecessary data
-        $team->makeHidden(["image"]);
-        $team->levels->makeHidden(["pivot", "created_at", "updated_at"]);
-        $team->levels->first()->evaluations->makeHidden(["level_id"]);
-        $team->levels->first()->evaluations->each(function ($evaluation) {
-            $evaluation->criteria->makeHidden(["evaluation_id"]);
-            $evaluation->criteria->each(function ($criteria) {
-                // append the first team score to the criteria
-                $criteria->score = $criteria->teams->first()->pivot->score;
-                $criteria->calculated_score = $criteria->score * $criteria->weight / 100;
-                $criteria->makeHidden(["teams"]);
-            });
-        });
+        $team = $this->hideTeamUnnecessaryData($team);
         $team['level'] = $team->levels->first();
         $team->makeHidden(["levels"]);
 
