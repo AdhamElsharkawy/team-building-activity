@@ -88,6 +88,7 @@ class TeamController extends Controller
                 });
             });
         });
+        
         return response()->json(['team' => $team]);
     } // end of show
 
