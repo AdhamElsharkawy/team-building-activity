@@ -68,7 +68,26 @@ class TeamController extends Controller
      */
     public function show(Team $team)
     {
-        $team->load(['users', 'levels.evaluations.criteria']);
+        $id = $team->id;
+        $team->load(['users', 'levels' => function ($q) use ($id) {
+            $q->with(['evaluations' => function ($q) use ($id) {
+                $q->with(['criteria' => function ($q) use ($id) {
+                    $q->with(['teams' => function ($q) use ($id) {
+                        $q->where('team_id', $id);
+                    }]);
+                }]);
+            }]);
+        }]);
+        
+        $team->levels->each(function ($level) {
+            $level->evaluations->each(function ($evaluation) {
+                $evaluation->criteria->each(function ($criteria) {
+                    $criteria->score = $criteria->teams->first()->pivot->score;
+                    $criteria->calculated_score = $criteria->score * $criteria->weight / 100;
+                    $criteria->makeHidden(["teams"]);
+                });
+            });
+        });
         return response()->json(['team' => $team]);
     } // end of show
 

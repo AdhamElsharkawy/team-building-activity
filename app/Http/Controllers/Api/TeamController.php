@@ -18,7 +18,7 @@ class TeamController extends Controller
         $teams = Team::select('id', 'name', 'image', 'color')->get();
         // hide unnecessary data
         $teams->makeHidden(["created_at", "updated_at", "image"]);
-       
+
         $seo = Seo::first();
         return $this->apiSuccessResponse(
             ["teams" => $teams],
@@ -53,19 +53,29 @@ class TeamController extends Controller
 
     public function showLevel($id, $level_id)
     {
-        $team = Team::with(['levels' => function ($q) use ($level_id) {
-            $q->where('level_id', $level_id)->with(['evaluations' => function ($q) {
-                $q->with('criteria');
+        $team = Team::with(['levels' => function ($q) use ($level_id, $id) {
+            $q->where('level_id', $level_id)->with(['evaluations' => function ($q) use ($id) {
+                $q->with(['criteria' => function ($q) use ($id) {
+                    $q->with(['teams' => function ($q) use ($id) {
+                        $q->where('team_id', $id);
+                    }]);
+                }]);
             }]);
         }])->find($id);
         if (!$team) return response()->json(["status" => "error", "message" => "Team not found"], 404);
-        
+
         // hide unnecessary data
         $team->makeHidden(["image"]);
         $team->levels->makeHidden(["pivot", "created_at", "updated_at"]);
         $team->levels->first()->evaluations->makeHidden(["level_id"]);
         $team->levels->first()->evaluations->each(function ($evaluation) {
             $evaluation->criteria->makeHidden(["evaluation_id"]);
+            $evaluation->criteria->each(function ($criteria) {
+                // append the first team score to the criteria
+                $criteria->score = $criteria->teams->first()->pivot->score;
+                $criteria->calculated_score = $criteria->score * $criteria->weight / 100;
+                $criteria->makeHidden(["teams"]);
+            });
         });
         $team['level'] = $team->levels->first();
         $team->makeHidden(["levels"]);
