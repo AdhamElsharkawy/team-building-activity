@@ -26,7 +26,7 @@
                                     'mr-2': !$store.getters['isRtl'],
                                     'ml-2': $store.getters['isRtl'],
                                 }"
-                                @click="createNewUser"
+                                @click="createNewLevel"
                             />
                             <Button
                                 label="delete"
@@ -34,7 +34,7 @@
                                 class="p-button-danger"
                                 @click="confirmDeleteSelected"
                                 :disabled="
-                                    !selectedUsers || !selectedUsers.length
+                                    !selectedLevels || !selectedLevels.length
                                 "
                             />
                         </div>
@@ -50,23 +50,23 @@
                     </template>
                 </Toolbar>
 
-                <user-list
-                    ref="listUserComponent"
-                    :currentUsers="currentUsers"
-                    @selectUsers="selectUsers"
-                    @editUser="editUser"
-                    @deleteUser="fill"
-                ></user-list>
+                <level-list
+                    ref="listLevelComponent"
+                    :currentLevels="currentLevels"
+                    @selectLevels="selectLevels"
+                    @editLevel="editLevel"
+                    @deleteLevel="fill"
+                ></level-list>
 
-                <edit-user ref="editUserComponent"></edit-user>
+                <edit-level ref="editLevelComponent"></edit-level>
 
-                <create-user
-                    ref="createUserComponent"
-                    @userCreated="fill"
-                ></create-user>
+                <create-level
+                    ref="createLevelComponent"
+                    @levelCreated="fill"
+                ></create-level>
 
                 <Dialog
-                    v-model:visible="deleteUsersDialog"
+                    v-model:visible="deleteLevelsDialog"
                     :style="{ width: '450px' }"
                     header="Confirm"
                     :modal="true"
@@ -76,9 +76,9 @@
                             class="pi pi-exclamation-triangle mr-3"
                             style="font-size: 2rem"
                         />
-                        <span v-if="user"
+                        <span v-if="level"
                             >Are you sure you want to delete the selected
-                            users?</span
+                            levels?</span
                         >
                     </div>
                     <template #footer>
@@ -86,13 +86,13 @@
                             label="No"
                             icon="pi pi-times"
                             class="p-button-text"
-                            @click="deleteUsersDialog = false"
+                            @click="deleteLevelsDialog = false"
                         />
                         <Button
                             label="Yes"
                             icon="pi pi-check"
                             class="p-button-text"
-                            @click="deleteSelectedUsers"
+                            @click="deleteSelectedLevels"
                         />
                     </template>
                 </Dialog>
@@ -102,18 +102,18 @@
 </template>
 
 <script>
-import UserList from "./UserList.vue";
-import EditUser from "../edit/EditUser.vue";
-import CreateUser from "../create/CreateUser.vue";
+import LevelList from "./LevelList.vue";
+import EditLevel from "../edit/EditLevel.vue";
+import CreateLevel from "../create/CreateLevel.vue";
 import { useToast } from "primevue/usetoast";
 
 export default {
-    components: { UserList, EditUser, CreateUser },
+    components: { LevelList, EditLevel, CreateLevel },
     data() {
         return {
-            currentUsers: [],
-            deleteUsersDialog: false,
-            selectedUsers: null,
+            currentLevels: [],
+            deleteLevelsDialog: false,
+            selectedLevels: null,
             loading: false,
             isEmpty: false,
             errors: null,
@@ -121,24 +121,24 @@ export default {
     }, //end of data
 
     methods: {
-        createNewUser() {
-            this.user = {};
-            this.$refs.createUserComponent.openDialog();
+        createNewLevel() {
+            this.level = {};
+            this.$refs.createLevelComponent.openDialog();
         }, //end of openNew
 
-        deleteSelectedUsers() {
+        deleteSelectedLevels() {
             this.loading = true;
             axios
-                .delete("/api/admin/users/delete/many", {
+                .delete("/api/admin/levels/delete/many", {
                     data: {
-                        users: this.selectedUsers.map((val) => val.id),
+                        levels: this.selectedLevels.map((val) => val.id),
                     },
                 })
                 .then((response) => {
-                    this.currentUsers = this.currentUsers.filter(
-                        (val) => !this.selectedUsers.includes(val)
+                    this.currentLevels = this.currentLevels.filter(
+                        (val) => !this.selectedLevels.includes(val)
                     );
-                    this.selectedUsers = null;
+                    this.selectedLevels = null;
                     this.toast.add({
                         severity: "success",
                         summary: "Successful",
@@ -158,24 +158,24 @@ export default {
                 })
                 .then(() => {
                     this.loading = false;
-                    this.deleteUsersDialog = false;
+                    this.deleteLevelsDialog = false;
                 });
-        }, //end of deleteSelectedUsers
+        }, //end of deleteSelectedLevels
 
         confirmDeleteSelected() {
-            this.deleteUsersDialog = true;
+            this.deleteLevelsDialog = true;
         }, //end of confirmDeleteSelected
 
         exportCSV() {
-            this.$refs.listUserComponent.exportCSV();
+            this.$refs.listLevelComponent.exportCSV();
         }, //end of exportCSV
 
         fill() {
             this.loading = true;
             axios
-                .get("/api/admin/users")
+                .get("/api/admin/levels")
                 .then((response) => {
-                    this.currentUsers = response.data.users;
+                    this.currentLevels = response.data.levels;
                 })
                 .catch((errors) => {
                     this.error = errors.response.data;
@@ -185,13 +185,13 @@ export default {
                 }); //end of axios request
         }, //end of fill function
 
-        selectUsers(selectedUsers) {
-            this.selectedUsers = selectedUsers;
-        }, //end of selectUsers
+        selectLevels(selectedLevels) {
+            this.selectedLevels = selectedLevels;
+        }, //end of selectLevels
 
-        editUser(user) {
-            this.$refs.editUserComponent.openDialog(user);
-        }, //end of editUser
+        editLevel(level) {
+            this.$refs.editLevelComponent.openDialog(level);
+        }, //end of editLevel
     }, //end of methods
 
     beforeMount() {

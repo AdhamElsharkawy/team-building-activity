@@ -10,6 +10,7 @@ use App\Http\Traits\ImageTrait;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Level;
 
 class TeamController extends Controller
 {
@@ -49,6 +50,10 @@ class TeamController extends Controller
                     $user->update(['team_id' => $team->id]);
                 }
             }
+            // asocciate all levels to team
+            $levels = Level::all();
+            $team->levels()->attach($levels);
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
@@ -72,7 +77,7 @@ class TeamController extends Controller
      */
     public function edit(Team $team)
     {
-        return response()->json(['team' => $team, 'users' => User::latest()->get()]);
+        return response()->json(['team' => $team->load('users'), 'users' => User::latest()->get()]);
     } // end of edit
 
     /**
@@ -117,15 +122,14 @@ class TeamController extends Controller
     /**
      * Remove the specified resources from storage.
      */
-    public function destroyAll(Request $request)
+    public function destroyMany(Request $request)
     {
+        $request->validate(['teams' => 'required|array|min:1|exists:teams,id']);
         $teams = Team::whereIn('id', $request->teams)->get();
         foreach ($teams as $team) {
             $team->image != 'assets/images/team.png' ? $this->deleteImg($team->image) : '';
-            // $team->users()->delete();
-            $team->delete();
         }
-
+        Team::whereIn('id', $request->teams)->delete();
         return response()->json(['message' => __('Teams Deleted Successfully')]);
     } // end of destroyAll
 }

@@ -11,7 +11,7 @@ class StoreLevelRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,16 @@ class StoreLevelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'order' => 'required|integer',
+            'color' => 'required|string|max:255',
+            'type' => 'required|string|in:score,evaluation',
+            'evaluations' => 'required_if:type,evaluation|array',
+            'evaluations.*.name' => 'required|string|max:255',
+            'evaluations.*.criteria' => 'required|array',
+            'evaluations.*.criteria.*.name' => 'required|string|max:255',
+            'evaluations.*.criteria.*.weight' => 'required|integer',
+            'evaluations.*.criteria.*.order' => 'required|integer',
         ];
     }
 }

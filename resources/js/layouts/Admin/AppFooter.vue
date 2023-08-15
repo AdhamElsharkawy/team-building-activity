@@ -10,7 +10,7 @@ const changeLanguage = (lang) => {
 };
 
 const logoUrl = computed(() => {
-    return `../${layoutConfig.darkTheme.value ? "Logo" : "Logo"}.svg`;
+    return `../${layoutConfig.darkTheme.value ? "Logo-white":"Logo"}.svg`;
 });
 </script>
 
@@ -20,15 +20,15 @@ const logoUrl = computed(() => {
         :class="$store.getters['isRtl'] ? 'flex flex-row-reverse' : ''"
     >
         <img :src="logoUrl" alt="Logo" height="20" class="mx-2" />
-        {{ $t("by") }}
-        <span class="font-medium mx-2"
+        <!-- {{ $t("by") }} -->
+        <!-- <span class="font-medium mx-2"
             ><a
-                href="https://islamdev.me"
+                href="https://inteligencia.me/"
                 class="transition ease-in-out no-underline"
-                >Islam Samy</a
+                >Inteligencia</a
             >
-        </span>
-        <button
+        </span> -->
+        <!-- <button
             class="btn btn-link btn-sm p-0 ml-1"
             @click="changeLanguage('ar')"
         >
@@ -39,7 +39,7 @@ const logoUrl = computed(() => {
             @click="changeLanguage('en')"
         >
             English
-        </button>
+        </button> -->
     </div>
 </template>
 <style lang="scss" scoped></style>

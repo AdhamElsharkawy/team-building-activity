@@ -3,7 +3,7 @@
     <Dialog
         v-model:visible="newTeamDialog"
         :style="{ width: '450px' }"
-        :header="$t('newTeam')"
+        header="New Team"
         :modal="true"
         class="p-fluid"
     >
@@ -15,19 +15,20 @@
                         accept="image/*"
                         customUpload
                         :maxFileSize="2048000"
-                        :chooseLabel="$t('chooseImage')"
+                        chooseLabel="Choose Image"
                         @change="uploadImage"
                         ref="fileUploader"
                         class="m-0"
                     />
                 </div>
             </div>
+            <small class="p-invalid text-red-600" v-if="submitted && !team.image">
+                Image Is Required
+            </small>
         </div>
         <div class="field">
-            <label
-                for="name"
-                :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("name") }}</label
+            <label for="name" :class="[{ 'float-right': $store.getters.isRtl }]"
+                >Name</label
             >
             <InputText
                 id="name"
@@ -40,15 +41,15 @@
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !team.name">{{
-                $t("nameIsRequired")
-            }}</small>
+            <small class="p-invalid" v-if="submitted && !team.name">
+                Name Is Required
+            </small>
         </div>
         <div class="field">
             <label
                 for="color"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("color") }}</label
+                >Color</label
             >
             <InputText
                 id="color"
@@ -60,15 +61,15 @@
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !team.color">{{
-                $t("colorIsRequired")
-            }}</small>
+            <small class="p-invalid" v-if="submitted && !team.color">
+                Color Is Required
+            </small>
         </div>
         <div class="field">
             <label
                 for="selectUsers"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("selectUsers") }}</label
+                >Select Users</label
             >
 
             <MultiSelect
@@ -76,7 +77,7 @@
                 display="chip"
                 :options="users"
                 optionLabel="name"
-                :placeholder="$t('selectUsers')"
+                placeholder="Select Users"
                 class="w-full"
             />
         </div>
@@ -88,13 +89,13 @@
                 }"
             >
                 <Button
-                    :label="$t('cancel')"
+                    label="Cancel"
                     icon="pi pi-times"
                     class="p-button-text"
                     @click="hideDialog"
                 />
                 <Button
-                    :label="$t('submit')"
+                    label="Submit"
                     icon="pi pi-check"
                     class="p-button-text"
                     @click="createTeam"
@@ -145,6 +146,12 @@ export default {
                 }
             });
     }, //end of mounted
+
+    watch: {
+        selectedUsers() {
+            console.log(this.selectedUsers);
+        },
+    },
 
     methods: {
         uploadImage() {

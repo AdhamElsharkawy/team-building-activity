@@ -19,7 +19,7 @@
                             }"
                         >
                             <Button
-                                :label="$t('new')"
+                                label="New"
                                 icon="pi pi-plus"
                                 class="p-button-success"
                                 :class="{
@@ -29,7 +29,7 @@
                                 @click="createNewTeam"
                             />
                             <Button
-                                :label="$t('delete')"
+                                label="Delete"
                                 icon="pi pi-trash"
                                 class="p-button-danger"
                                 @click="confirmDeleteSelected"
@@ -42,7 +42,7 @@
 
                     <template v-slot:end>
                         <Button
-                            :label="$t('export')"
+                            label="Export"
                             icon="pi pi-upload"
                             class="p-button-help"
                             @click="exportCSV($event)"
@@ -61,7 +61,9 @@
 
                 <edit-team ref="editTeamComponent"></edit-team>
 
-                <show-team ref="showTeamComponent"></show-team>
+                <show-team
+                    ref="showTeamComponent"
+                ></show-team>
 
                 <create-team
                     ref="createTeamComponent"
@@ -133,7 +135,7 @@ export default {
         deleteSelectedTeams() {
             this.loading = true;
             axios
-                .delete("/api/admin/teams/delete/all", {
+                .delete("/api/admin/teams/delete/many", {
                     data: {
                         teams: this.selectedTeams.map((val) => val.id),
                     },

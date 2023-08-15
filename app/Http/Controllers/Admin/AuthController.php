@@ -3,17 +3,21 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\GeneralTrait;
+use App\Models\Seo;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Traits\SeoTrait;
 
 class AuthController extends Controller
 {
+    use GeneralTrait, SeoTrait;
+
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
-    }
+        $this->middleware('jwt:api', ['except' => ['login', 'register']]);
+    } // end of __construct
 
     public function login(Request $request)
     {
@@ -32,41 +36,22 @@ class AuthController extends Controller
         }
 
         $user = auth('api')->user();
-        return response()->json([
-            'status' => 'success',
+
+        $response_data = [
             'user' => $user,
             'authorisation' => [
                 'token' => $token,
                 'type' => 'bearer',
             ]
-        ]);
-    }
+        ];
+        $seo = Seo::first();
+        return $this->apiSuccessResponse(
+            $response_data,
+            $this->seo($seo->title, 'login', $seo->description, $seo->keywords),
+            __('User logged in successfully')
+        );
+    } // end of login
 
-    public function register(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
-        ]);
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        $token = auth('api')->login($user);
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User created successfully',
-            'user' => $user,
-            'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
-            ]
-        ]);
-    }
     public function logout()
     {
         Auth::logout();
@@ -74,16 +59,22 @@ class AuthController extends Controller
             'status' => 'success',
             'message' => 'Successfully logged out',
         ]);
-    }
+    } // end of logout
+
     public function refresh()
     {
-        return response()->json([
-            'status' => 'success',
+        $response_data = [
             'user' => auth('api')->user(),
             'authorisation' => [
                 'token' => auth('api')->refresh(),
                 'type' => 'bearer',
             ]
-        ]);
-    }
+        ];
+        $seo = Seo::first();
+        return $this->apiSuccessResponse(
+            $response_data,
+            $this->seo($seo->title, 'refresh', $seo->description, $seo->keywords),
+            __('Token refreshed successfully')
+        );
+    } // end of refresh
 }

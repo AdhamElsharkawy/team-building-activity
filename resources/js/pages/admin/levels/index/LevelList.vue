@@ -2,15 +2,15 @@
     <Loading v-if="loading" />
     <DataTable
         ref="dt"
-        :value="users"
-        v-model:selection="selectedUsers"
+        :value="levels"
+        v-model:selection="selectedLevels"
         dataKey="id"
         :paginator="true"
         :rows="10"
         :filters="filters"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         :rowsPerPageOptions="[5, 10, 25]"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} levels"
         responsiveLayout="scroll"
     >
         <template #header>
@@ -18,7 +18,7 @@
                 class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
                 :class="{ 'md:flex-row-reverse': $store.getters['isRtl'] }"
             >
-                <h5 class="m-0">Manage Users</h5>
+                <h5 class="m-0">Manage Levels</h5>
                 <span class="block mt-2 md:mt-0 p-input-icon-left">
                     <i class="pi pi-search" />
                     <InputText
@@ -37,6 +37,19 @@
         ></Column>
 
         <Column
+            field="order"
+            header="order"
+            :sortable="true"
+            headerStyle="width:14%; min-width:14rem;"
+            :class="{ 'text-right': $store.getters['isRtl'] }"
+        >
+            <template #body="slotProps">
+                <span class="p-column-title">Role</span>
+                {{ slotProps.data.order }}
+            </template>
+        </Column>
+
+        <Column
             field="name"
             header="name"
             :sortable="true"
@@ -50,59 +63,15 @@
         </Column>
 
         <Column
-            field="image"
-            header="image"
-            headerStyle="width:14%; min-width:10rem;"
-            :class="{ 'text-right': $store.getters['isRtl'] }"
-        >
-            <template #body="slotProps">
-                <span class="p-column-title">Image</span>
-                <img
-                    :src="slotProps.data.image_path"
-                    :alt="slotProps.data.image"
-                    class="shadow-2"
-                    width="100"
-                />
-            </template>
-        </Column>
-
-        <Column
-            field="email"
-            header="email"
+            field="color"
+            header="color"
             :sortable="true"
             headerStyle="width:14%; min-width:14rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
         >
             <template #body="slotProps">
-                <span class="p-column-title">Email</span>
-                {{ slotProps.data.email }}
-            </template>
-        </Column>
-
-        <Column
-            field="team.name"
-            header="Team"
-            :sortable="true"
-            headerStyle="width:14%; min-width:14rem;"
-            :class="{ 'text-right': $store.getters['isRtl'] }"
-        >
-            <template #body="slotProps">
-                <span class="p-column-title">team</span>
-                {{ slotProps.data.team?.name }}
-            </template>
-        </Column>
-
-
-        <Column
-            field="role"
-            header="role"
-            :sortable="true"
-            headerStyle="width:14%; min-width:14rem;"
-            :class="{ 'text-right': $store.getters['isRtl'] }"
-        >
-            <template #body="slotProps">
-                <span class="p-column-title">Role</span>
-                {{ slotProps.data.role }}
+                <span class="p-column-title">Color</span>
+                {{ slotProps.data.color }}
             </template>
         </Column>
 
@@ -116,18 +85,18 @@
                 <Button
                     icon="pi pi-pencil"
                     class="p-button-rounded p-button-success mx-2"
-                    @click="editUser(slotProps.data)"
+                    @click="editLevel(slotProps.data)"
                 />
                 <Button
                     icon="pi pi-trash"
                     class="p-button-rounded p-button-warning mx-2"
-                    @click="confirmDeleteUser(slotProps.data)"
+                    @click="confirmDeleteLevel(slotProps.data)"
                 />
             </template>
         </Column>
     </DataTable>
     <Dialog
-        v-model:visible="deleteUserDialog"
+        v-model:visible="deleteLevelDialog"
         :style="{ width: '450px' }"
         header="Confirm"
         :modal="true"
@@ -137,8 +106,8 @@
                 class="pi pi-exclamation-triangle mr-3"
                 style="font-size: 2rem"
             />
-            <span v-if="user"
-                >Are you sure you want to delete <b>{{ user.name }}</b
+            <span v-if="level"
+                >Are you sure you want to delete <b>{{ level.name }}</b
                 >?</span
             >
         </div>
@@ -147,13 +116,13 @@
                 label="No"
                 icon="pi pi-times"
                 class="p-button-text"
-                @click="deleteUserDialog = false"
+                @click="deleteLevelDialog = false"
             />
             <Button
                 label="Yes"
                 icon="pi pi-check"
                 class="p-button-text"
-                @click="deleteUser"
+                @click="deleteLevel"
             />
         </template>
     </Dialog>
@@ -165,23 +134,23 @@ import { useToast } from "primevue/usetoast";
 
 export default {
     props: {
-        currentUsers: {
+        currentLevels: {
             type: Array,
             required: true,
         },
     }, //end of props
 
-    emits: ["selectUsers", "deleteUser", "editUser"],
+    emits: ["selectLevels", "deleteLevel", "editLevel"],
 
     data() {
         return {
             toast: null,
             loading: false,
-            userDialog: false,
-            deleteUserDialog: false,
-            user: {},
-            users: this.currentUsers,
-            selectedUsers: null,
+            levelDialog: false,
+            deleteLevelDialog: false,
+            level: {},
+            levels: this.currentLevels,
+            selectedLevels: null,
             filters: {
                 global: { value: null, matchMode: FilterMatchMode.CONTAINS },
             },
@@ -189,8 +158,8 @@ export default {
     }, //end of data
 
     watch: {
-        selectedUsers(val) {
-            this.$emit("selectUsers", val);
+        selectedLevels(val) {
+            this.$emit("selectLevels", val);
         },
     }, //end of watch
 
@@ -200,15 +169,15 @@ export default {
     }, //end of beforeMount
 
     methods: {
-        confirmDeleteUser(user) {
-            this.user = user;
-            this.deleteUserDialog = true;
-        }, //end of confirmDeleteUser
+        confirmDeleteLevel(level) {
+            this.level = level;
+            this.deleteLevelDialog = true;
+        }, //end of confirmDeleteLevel
 
-        deleteUser() {
+        deleteLevel() {
             this.loading = true;
             axios
-                .delete("/api/admin/users/" + this.user.id)
+                .delete("/api/admin/levels/" + this.level.id)
                 .then((response) => {
                     this.toast.add({
                         severity: "success",
@@ -216,9 +185,9 @@ export default {
                         detail: response.data.message,
                         life: 3000,
                     });
-                    this.$emit("deleteUser");
-                    this.deleteUserDialog = false;
-                    this.user = {};
+                    this.$emit("deleteLevel");
+                    this.deleteLevelDialog = false;
+                    this.level = {};
                 })
                 .catch((errors) => {
                     if (errors.response) {
@@ -232,9 +201,9 @@ export default {
                 })
                 .then(() => {
                     this.loading = false;
-                    this.deleteUserDialog = false;
+                    this.deleteLevelDialog = false;
                 });
-        }, //end of deleteUser
+        }, //end of deleteLevel
 
         initFilters() {
             this.filters = {
@@ -246,9 +215,9 @@ export default {
             this.$refs.dt.exportCSV();
         }, //end of exportCSV
 
-        editUser(user) {
-            this.$emit("editUser", user);
-        }, //end of editUser
+        editLevel(level) {
+            this.$emit("editLevel", level);
+        }, //end of editLevel
     }, //end of methods
 };
 </script>

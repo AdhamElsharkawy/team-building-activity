@@ -29,7 +29,6 @@ class StoreUserRequest extends FormRequest
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'role' => ['required', 'in:user,admin,captin'],
             'image' => ['nullable', 'mimes:jpeg,jpg,png,gif', 'image'],
-            'team_id' => ['required', 'exists:teams,id'],
         ];
     }
 }

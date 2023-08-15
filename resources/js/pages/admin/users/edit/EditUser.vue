@@ -2,7 +2,7 @@
     <Dialog
         v-model:visible="userDialog"
         :style="{ width: '450px' }"
-        :header="$t('editUser')"
+        header="Edit User"
         :modal="true"
         class="p-fluid"
     >
@@ -22,7 +22,7 @@
                         accept="image/*"
                         customUpload
                         :maxFileSize="2048000"
-                        :chooseLabel="$t('chooseImage')"
+                        chooseLabel="Choose Image"
                         @change="uploadImage"
                         ref="fileUploader"
                         class="m-0"
@@ -35,7 +35,7 @@
             <label
                 for="name"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("name") }}</label
+                >name</label
             >
             <InputText
                 id="name"
@@ -49,7 +49,7 @@
                 ]"
             />
             <small class="p-invalid" v-if="submitted && !user.name">{{
-                $t("nameIsRequired")
+                nameIsRequired
             }}</small>
         </div>
 
@@ -57,7 +57,7 @@
             <label
                 for="email"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("email") }}</label
+                >email</label
             >
             <InputText
                 id="email"
@@ -69,16 +69,16 @@
                     { 'text-right': $store.getters.isRtl },
                 ]"
             />
-            <small class="p-invalid" v-if="submitted && !user.email">{{
-                $t("emailIsRequired")
-            }}</small>
+            <small class="p-invalid" v-if="submitted && !user.email">
+                emailIsRequired
+            </small>
         </div>
 
         <div class="field">
             <label
                 class="mb-3"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
-                >{{ $t("role") }}</label
+                >role</label
             >
             <div class="formgrid grid">
                 <div class="field-radiobutton col-4">
@@ -88,16 +88,16 @@
                         value="admin"
                         v-model="user.role"
                     />
-                    <label for="role1">{{ $t("admin") }}</label>
+                    <label for="role1">admin</label>
                 </div>
                 <div class="field-radiobutton col-4">
                     <RadioButton
                         id="role2"
                         name="role"
-                        value="user"
+                        value="member"
                         v-model="user.role"
                     />
-                    <label for="role2">{{ $t("user") }}</label>
+                    <label for="role2">Member</label>
                 </div>
                 <div class="field-radiobutton col-4">
                     <RadioButton
@@ -106,24 +106,9 @@
                         value="captin"
                         v-model="user.role"
                     />
-                    <label for="role3">{{ $t("Captin") }}</label>
+                    <label for="role3">Captin</label>
                 </div>
             </div>
-        </div>
-
-        <div class="field">
-            <label
-                for="departments"
-                :class="[{ 'float-right': $store.getters.isRtl }]"
-            >Department</label
-            >
-            <Dropdown
-                v-model="selectedOption"
-                :options="allTeams"
-                optionLabel="name"
-                placeholder="Select Team"
-                class="w-full md:w-14rem"
-            />
         </div>
 
         <template #footer>
@@ -133,13 +118,13 @@
                 }"
             >
                 <Button
-                    :label="$t('cancel')"
+                    label="cancel"
                     icon="pi pi-times"
                     class="p-button-text"
                     @click="hideDialog"
                 />
                 <Button
-                    :label="$t('submit')"
+                    label="submit"
                     icon="pi pi-check"
                     class="p-button-text"
                     @click="updateUser"
@@ -153,13 +138,11 @@
 import { useToast } from "primevue/usetoast";
 
 export default {
-    props: ["allTeams"],
     data() {
         return {
             user: {},
             userDialog: false,
             submitted: false,
-            selectedOption: null,
         };
     },
     methods: {
@@ -176,7 +159,6 @@ export default {
                 formData.append("name", this.user.name);
                 formData.append("email", this.user.email);
                 formData.append("role", this.user.role);
-                formData.append("team_id", this.selectedOption.id);
                 if (typeof this.user.image == "object") {
                     formData.append("image", this.user.image);
                 }
@@ -216,7 +198,6 @@ export default {
         openDialog(user) {
             this.user = user;
             this.userDialog = true;
-            this.selectedOption = this.user.team;
         }, //end of openDialog
 
         hideDialog() {

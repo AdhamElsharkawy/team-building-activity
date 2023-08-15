@@ -20,7 +20,7 @@ onBeforeUnmount(() => {
 });
 
 const logoUrl = computed(() => {
-    return `../${layoutConfig.darkTheme.value ? "Logo" : "Logo"}.svg`;
+    return `../${layoutConfig.darkTheme.value ? "Logo-white":"Logo"}.svg`;
 });
 
 const onTopBarMenuButton = () => {
@@ -101,7 +101,7 @@ export default {
             :class="isRtl"
         >
             <img :src="logoUrl" alt="logo" />
-            <span class="mx-5">{{ $t("admin") }}</span>
+            <!-- <span class="mx-5">{{ $t("admin") }}</span> -->
         </router-link>
 
         <button

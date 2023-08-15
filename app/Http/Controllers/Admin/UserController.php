@@ -17,10 +17,9 @@ class UserController extends Controller
 
     private $paginate_users = 10;
 
-    public function index(Request $request)
+    public function index()
     {
-        $teams = Team::all();
-        return ['users' => User::where('email', '!=', 'super_admin@app.com')->with('team')->latest()->get(), 'teams' => $teams];
+        return ['users' => User::where('email', '!=', 'super_admin@app.com')->with('team')->latest()->get()];
     } //end of index
 
     public function store(StoreUserRequest $request)
@@ -73,14 +72,14 @@ class UserController extends Controller
         return response()->json(['message' => __('User Deleted Successfully')], 200);
     } //end of destroy
 
-    public function destroyAll(Request $request)
+    public function destroyMany(Request $request)
     {
+        $request->validate(['users' => 'required|array|min:1|exists:users,id']);
         $users = User::whereIn('id', $request->users)->get();
         foreach ($users as $user) {
             $user->image != 'assets/images/user.png' ? $this->deleteImg($user->image) : '';
-            $user->delete();
         }
-
+        User::whereIn('id', $request->users)->delete();
         return response()->json(['message' => __('Users Deleted Successfully')]);
     } //end of destroyAll
 }
