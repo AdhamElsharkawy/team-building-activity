@@ -16,7 +16,7 @@ services:
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
-            - '8003:80'
+            - '8007:80'
         environment:
             WWWUSER: 1000
             nortech-back_SAIL: 1
@@ -34,7 +34,7 @@ services:
         container_name: 'nortech-backDB'
         image: 'mysql/mysql-server:8.0'
         ports:
-            - '3311:3306'
+            - '3315:3306'
         environment:
             MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
             MYSQL_ROOT_HOST: '%'
