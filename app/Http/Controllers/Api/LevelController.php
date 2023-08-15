@@ -18,11 +18,11 @@ class LevelController extends Controller
     {
         $levels = Level::with('evaluations.criteria')->orderBy('order')->get();
 
-        $levels->makeHidden(["order","created_at", "updated_at"]);
+        $levels->makeHidden(["order", "created_at", "updated_at"]);
         $levels->each(function ($level) {
             $level->evaluations->makeHidden(["level_id", "created_at", "updated_at"]);
             $level->evaluations->each(function ($evaluation) {
-                $evaluation->criteria->makeHidden(["evaluation_id", 'score', "created_at", "updated_at"]);
+                $evaluation->criteria->makeHidden(["evaluation_id", "created_at", "updated_at"]);
             });
         });
         $seo = Seo::first();
@@ -78,16 +78,21 @@ class LevelController extends Controller
                 $level->teams()->updateExistingPivot($team->id, ['score' => $teams[$team_index]['score']]);
             } else {
                 $evaluations = $teams[$team_index]['evaluations'];
+                $score = 0;
                 foreach ($evaluations as $evaluation_index => $evaluation) {
                     $evaluation = $level->evaluations()->find($evaluation['id']);
                     if (!$evaluation) return response()->json(["status" => "error", "message" => "Evaluation not found"], 404);
+                    $evaluation_score = 0;
                     $criteria = $teams[$team_index]['evaluations'][$evaluation_index]['criteria'];
                     foreach ($criteria as $index => $criterion) {
                         $criterion = $evaluation->criteria()->find($criterion['id']);
                         if (!$criterion) return response()->json(["status" => "error", "message" => "Criterion not found"], 404);
+                        $evaluation_score += $teams[$team_index]['evaluations'][$evaluation_index]['criteria'][$index]['score'] * $criterion->weight / 100;
                         $criterion->teams()->updateExistingPivot($team->id, ['score' => $teams[$team_index]['evaluations'][$evaluation_index]['criteria'][$index]['score']]);
                     }
+                    $score += $evaluation_score;
                 }
+                $level->teams()->updateExistingPivot($team->id, ['score' => $score]);
             }
         }
 

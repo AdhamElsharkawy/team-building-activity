@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('team_id')->constrained('teams')->onDelete('cascade');
             $table->foreignId('level_id')->constrained('levels')->onDelete('cascade');
-            $table->bigInteger('score')->default(0);
+            $table->decimal('score')->default(0);
             $table->timestamps();
         });
     }
