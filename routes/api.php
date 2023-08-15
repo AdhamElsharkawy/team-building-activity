@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\LevelController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,7 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
     Route::get("users/{user}", [UserController::class, 'show'])->name('users.show');
     
     // levels apis
+    // levels
     Route::get("levels", [LevelController::class, 'index'])->name('levels');
 
     // update teamSorce in level
@@ -35,4 +37,7 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
 
     
 
+
+    // dashboard
+    Route::get("leaderboard", [DashboardController::class, 'index'])->name('leaderboard');
 });
