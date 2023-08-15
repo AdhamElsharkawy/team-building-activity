@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Level;
 use App\Models\Evaluation;
@@ -36,6 +35,10 @@ class LevelSeeder extends Seeder
                     ->create([
                         'evaluation_id' => $evaluation->id,
                     ]);
+                // attach teams to criteria
+                foreach ($criteria as $criterion) {
+                    $criterion->teams()->attach($team_ids);
+                }
             }
         }
 

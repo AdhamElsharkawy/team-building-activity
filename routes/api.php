@@ -21,8 +21,12 @@ require __DIR__ . '/auth.php';
 Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
     // levels 
     Route::get("levels", [LevelController::class, 'index'])->name('levels');
+    Route::get("levels/{id}", [LevelController::class, 'show'])->name('levels.show');
+    Route::put("levels", [LevelController::class, 'update'])->name('levels.update');
 
     // teams
+    Route::get("teams", [TeamController::class, 'index'])->name('teams');
+    Route::get("teams/{id}", [TeamController::class, 'show'])->name('teams.show');
     Route::get("teams/{id}/level/{level_id}", [TeamController::class, 'showLevel'])->name('teams.showLevel');
 
     // update teamSorce in level
