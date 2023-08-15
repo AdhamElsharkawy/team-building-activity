@@ -19,6 +19,7 @@ class DashboardController extends Controller
 
         $teams = $this->hideUnnecessaryData($teams);
 
+        $teams = $teams->sortByDesc('score')->values()->all();
         $seo = Seo::first();
         return $this->apiSuccessResponse(
             ["teams" => $teams],
