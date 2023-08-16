@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\LevelController;
+use App\Http\Controllers\Api\SettingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TeamController;
 
@@ -38,14 +39,14 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
 
     // update teamSorce in level
     Route::post("levels/{level}/updateTeamScore", [LevelController::class, 'updateTeamScore'])->name('levels.updateTeamScore');
+
+    // settings 
+    Route::get("settings", [SettingController::class, 'index'])->name('settings');
     
     // update teamSorce in alllevels
     // Route::post("levels/updateTeamScoreAllLevels", [LevelController::class, 'updateTeamScoreAllLevels'])->name('levels.updateTeamScoreAllLevels');
     
     // Route::get("levels/{level}", [LevelController::class, 'show'])->name('levels.show');
-
-    
-
 
     // dashboard
     Route::get("leaderboard", [DashboardController::class, 'index'])->name('leaderboard');
