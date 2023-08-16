@@ -2,109 +2,100 @@
     <Toast />
     <div class="col-12">
         <div class="card">
+            <h5 class="mb-5">App Settings</h5>
+
+            <div>
+                <FileUpload
+                    mode="basic"
+                    accept="image/*"
+                    customUpload
+                    :maxFileSize="2048000"
+                    chooseLabel="Choose Logo"
+                    @change="uploadLogo"
+                    ref="logoUploader"
+                    class="m-0"
+                />
+            </div>
+            <div class="field mt-5">
+                <label
+                    for="color"
+                    :class="[{ 'float-right': $store.getters.isRtl }]"
+                    class="mr-4"
+                    >Application Primary Color</label
+                >
+                <InputText
+                    id="color"
+                    v-model.trim="color"
+                    required="true"
+                    type="color"
+                    class="w-full"
+                    :class="[
+                        { 'p-invalid': submitted && !color },
+                        { 'text-right': $store.getters.isRtl },
+                    ]"
+                />
+                <small class="p-invalid" v-if="submitted && color">
+                    Color Is Required
+                </small>
+            </div>
+            <div>
+                <Button
+                    icon="pi pi-check"
+                    label="Submit Settings"
+                    class="p-mt-2 m-0"
+                    @click.prevent="updateSettings"
+                    :disabled="loading"
+                />
+            </div>
+        </div>
+        <div class="card">
             <h5 class="mb-5">{{ $t("Seos") }}</h5>
             <Loading v-if="loading" />
-            <div v-else class="p-fluid formgrid grid">
-                <div class="field col-12 md:col-6">
+            <div v-else class="p-fluid flex flex-col">
+                <div class="field">
                     <span class="p-float-label">
                         <InputText
                             type="text"
-                            id="title_en"
-                            v-model="title.en"
+                            id="title"
+                            v-model="title"
                             required="true"
-                            :placeholder="$t('english')"
-                            :class="{ 'p-invalid': submitted && !title.en }"
+                            :placeholder="$t('title')"
+                            :class="{ 'p-invalid': submitted && !title }"
                         />
-                        <label for="title_en">{{ $t("title") }}</label>
+                        <label for="title">{{ $t("title") }}</label>
                     </span>
-                    <small class="p-invalid" v-if="submitted && !title.en">{{
-                        $t("titleInEnglishIsRequired")
+                    <small class="p-invalid" v-if="submitted && !title">{{
+                        $t("titleIsRequired")
                     }}</small>
                 </div>
 
-                <div class="field col-12 md:col-6">
-                    <span class="p-float-label">
-                        <InputText
-                            type="text"
-                            id="title_ar"
-                            v-model="title.ar"
-                            :placeholder="$t('arabic')"
-                            :class="[
-                                { 'text-right': $store.getters.isRtl },
-                                { 'p-invalid': submitted && !title.ar },
-                            ]"
-                        />
-                        <label
-                            for="title_ar"
-                            :style="
-                                $store.getters.isRtl
-                                    ? 'right: 5px !important;'
-                                    : ''
-                            "
-                            >{{ $t("title") }}</label
-                        >
-                    </span>
-                    <small class="p-invalid" v-if="submitted && !title.ar">{{
-                        $t("titleInArabicIsRequired")
-                    }}</small>
-                </div>
-
-                <div class="field col-12 md:col-6">
+                <div class="field">
                     <span class="">
-                        <label for="description_en">{{
+                        <label for="description">{{
                             $t("description")
                         }}</label>
                     </span>
                     <span class="p-float-label">
                         <Editor
-                            id="description_en"
-                            v-model="description.en"
+                            id="description"
+                            v-model="description"
                             editorStyle="height: 320px"
                             aria-required="true"
                             :modules="$store.getters.getEditorOptions.modules"
                             :class="{
                                 'border rounded-lg border-red-500':
-                                    submitted && !description.en,
+                                    submitted && !description,
                             }"
-                            :placeholder="$t('english')"
+                            :placeholder="$t('description')"
                         />
                         <small
                             class="p-invalid"
-                            v-if="submitted && !description.en"
-                            >{{ $t("descriptionInEnglishIsRequired") }}</small
+                            v-if="submitted && !description"
+                            >{{ $t("descriptionIsRequired") }}</small
                         >
                     </span>
                 </div>
 
-                <div class="field col-12 md:col-6">
-                    <span class="">
-                        <label for="description_ar">{{
-                            $t("description")
-                        }}</label>
-                    </span>
-                    <span class="p-float-label">
-                        <Editor
-                            id="description_ar"
-                            v-model="description.ar"
-                            editorStyle="height: 320px"
-                            aria-required="true"
-                            :modules="$store.getters.getEditorOptions.modules"
-                            :placeholder="$t('arabic')"
-                            :class="[
-                                { 'right-to-left': $store.getters.isRtl },
-                                {
-                                    'border rounded-lg border-red-500':
-                                        submitted && !description.ar,
-                                },
-                            ]"
-                        />
-                        <small
-                            class="p-invalid"
-                            v-if="submitted && !description.ar"
-                            >{{ $t("descriptionInArabicIsRequired") }}</small
-                        >
-                    </span>
-                </div>
 
                 <div class="field col-12 mt-4">
                     <span class="p-float-label">
@@ -157,53 +148,6 @@
                 </div>
             </div>
         </div>
-        <div class="card">
-            <h5 class="mb-5">App Settings</h5>
-
-            <div>
-                <FileUpload
-                    mode="basic"
-                    accept="image/*"
-                    customUpload
-                    :maxFileSize="2048000"
-                    chooseLabel="Choose Logo"
-                    @change="uploadLogo"
-                    ref="logoUploader"
-                    class="m-0"
-                />
-            </div>
-            <div class="field mt-5">
-                <label
-                    for="color"
-                    :class="[{ 'float-right': $store.getters.isRtl }]"
-                    class="mr-4"
-                    >Application Primary Color</label
-                >
-                <InputText
-                    id="color"
-                    v-model.trim="color"
-                    required="true"
-                    type="color"
-                    class="w-full"
-                    :class="[
-                        { 'p-invalid': submitted && !color },
-                        { 'text-right': $store.getters.isRtl },
-                    ]"
-                />
-                <small class="p-invalid" v-if="submitted && color">
-                    Color Is Required
-                </small>
-            </div>
-            <div>
-                <Button
-                    icon="pi pi-check"
-                    label="Submit Settings"
-                    class="p-mt-2 m-0"
-                    @click.prevent="updateSettings"
-                    :disabled="loading"
-                />
-            </div>
-        </div>
     </div>
 </template>
 
@@ -213,14 +157,8 @@ import { useToast } from "primevue/usetoast";
 export default {
     data() {
         return {
-            title: {
-                en: "",
-                ar: "",
-            },
-            description: {
-                en: "",
-                ar: "",
-            },
+            title: "",
+            description: "",
             keywords: [],
             image: null,
             loading: false,
@@ -236,10 +174,8 @@ export default {
             axios
                 .get("/api/admin/seos")
                 .then((response) => {
-                    this.title.en = response.data.seo.title.en;
-                    this.title.ar = response.data.seo.title.ar;
-                    this.description.en = response.data.seo.description.en;
-                    this.description.ar = response.data.seo.description.ar;
+                    this.title = response.data.seo.title;
+                    this.description = response.data.seo.description;
                     this.keywords = response.data.seo.keywords.split(",");
                 })
                 .catch((error) => {
@@ -299,8 +235,8 @@ export default {
         updateSeo() {
             this.submitted = true;
             if (
-                this.title.en &&
-                this.description.en &&
+                this.title &&
+                this.description &&
                 this.keywords.length > 0
             ) {
                 this.loading = true;
