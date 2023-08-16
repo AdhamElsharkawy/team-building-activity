@@ -15,9 +15,8 @@ class TeamController extends Controller
     public function index()
     {
         // order by the score in the pivot table with levels
-        $teams = Team::select('id', 'name', 'image', 'color', 'score')->withCount('levels')->get();
+        $teams = Team::withCount('levels')->orderBy('score', 'DESC')->get();
         $teams->makeHidden(["created_at", "updated_at", "image"]);
-        $teams = $teams->sortByDesc('score')->values()->all();
         $seo = Seo::first();
         return $this->apiSuccessResponse(
             ["teams" => $teams],
