@@ -19,14 +19,20 @@ use App\Http\Controllers\Api\TeamController;
 */
 
 require __DIR__ . '/auth.php';
+Route::group(['as' => 'api.'], function () {
+    // settings 
+    Route::get("settings", [SettingController::class, 'index'])->name('settings');
+
+    // dashboard
+    Route::get("leaderboard", [DashboardController::class, 'index'])->name('leaderboard');
+});
+
 
 Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
     // user apis
     Route::get("users", [UserController::class, 'index'])->name('users');
     Route::get("users/{user}", [UserController::class, 'show'])->name('users.show');
-    
-    // levels apis
-    // levels
+
     // levels 
     Route::get("levels", [LevelController::class, 'index'])->name('levels');
     Route::get("levels/{id}", [LevelController::class, 'show'])->name('levels.show');
@@ -39,15 +45,4 @@ Route::group(['as' => 'api.', 'middleware' => 'jwt:api'], function () {
 
     // update teamSorce in level
     Route::post("levels/{level}/updateTeamScore", [LevelController::class, 'updateTeamScore'])->name('levels.updateTeamScore');
-
-    // settings 
-    Route::get("settings", [SettingController::class, 'index'])->name('settings');
-    
-    // update teamSorce in alllevels
-    // Route::post("levels/updateTeamScoreAllLevels", [LevelController::class, 'updateTeamScoreAllLevels'])->name('levels.updateTeamScoreAllLevels');
-    
-    // Route::get("levels/{level}", [LevelController::class, 'show'])->name('levels.show');
-
-    // dashboard
-    Route::get("leaderboard", [DashboardController::class, 'index'])->name('leaderboard');
 });
