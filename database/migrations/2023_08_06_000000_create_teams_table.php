@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('image')->default('assets/images/team.png');
             $table->string('color')->default('#000000');
+            $table->decimal('score')->default(0);
             $table->timestamps();
         });
     }

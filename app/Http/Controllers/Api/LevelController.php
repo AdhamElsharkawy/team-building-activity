@@ -119,6 +119,8 @@ class LevelController extends Controller
                     $score += $evaluation_score;
                 }
                 $level->teams()->updateExistingPivot($team->id, ['score' => $score]);
+                // update the team overall score
+                $team->update(['score' => $team->levels()->sum('score')]);
             } else {
                 return response()->json(["status" => "error", "message" => "Invalid data, debuging: check the level type or you may sent inapproprate data that is not compatible with the level type"], 422);
             }
