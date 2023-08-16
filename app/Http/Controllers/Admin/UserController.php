@@ -19,7 +19,9 @@ class UserController extends Controller
 
     public function index()
     {
-        return ['users' => User::where('email', '!=', 'super_admin@app.com')->with('team')->latest()->get()];
+        return ['users' => User::where('email', '!=', 'super_admin@app.com')->with(['team'=>function($q){
+            $q->select('id','name');
+        }])->latest()->get()];
     } //end of index
 
     public function store(StoreUserRequest $request)

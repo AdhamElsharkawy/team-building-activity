@@ -19,7 +19,7 @@ class Team extends Model
 
     protected $appends = [
         'image_path',
-        'score',
+        // 'score',
     ];
 
     public function getImagePathAttribute()
@@ -27,32 +27,32 @@ class Team extends Model
         return asset($this->image);
     } // end of getImagePathAttribute
 
-    public function getScoreAttribute()
-    {
-        $levels = $this->levels()->get();
-        if ($levels->count() == 0) return 0;
-        $score = 0;
-        foreach ($levels as $level) {
-            if ($level->type == 'evaluation') {
-                $evaluations = $level->evaluations()->get();
-                if ($evaluations->count() == 0) return 0;
-                $evaluation_score = 0;
-                foreach ($evaluations as $evaluation) {
-                    $criteria = $evaluation->criteria()->get();
-                    if ($criteria->count() == 0) return 0;
-                    $criteria_score = 0;
-                    foreach ($criteria as $criterion) {
-                        $criteria_score += ($criterion->teams()->find($this->id)->pivot->score) * ($criterion->weight / 100);
-                    }
-                    $evaluation_score += $criteria_score;
-                }
-                $score += $evaluation_score;
-            } else {
-                $score += $level->pivot->score;
-            }
-        }
-        return $score;
-    } // end of getScoreAttribute
+    // public function getScoreAttribute()
+    // {
+    //     $levels = $this->levels()->get();
+    //     if ($levels->count() == 0) return 0;
+    //     $score = 0;
+    //     foreach ($levels as $level) {
+    //         if ($level->type == 'evaluation') {
+    //             $evaluations = $level->evaluations()->get();
+    //             if ($evaluations->count() == 0) return 0;
+    //             $evaluation_score = 0;
+    //             foreach ($evaluations as $evaluation) {
+    //                 $criteria = $evaluation->criteria()->get();
+    //                 if ($criteria->count() == 0) return 0;
+    //                 $criteria_score = 0;
+    //                 foreach ($criteria as $criterion) {
+    //                     $criteria_score += ($criterion->teams()->find($this->id)->pivot->score) * ($criterion->weight / 100);
+    //                 }
+    //                 $evaluation_score += $criteria_score;
+    //             }
+    //             $score += $evaluation_score;
+    //         } else {
+    //             $score += $level->pivot->score;
+    //         }
+    //     }
+    //     return $score;
+    // } // end of getScoreAttribute
 
     public function users()
     {
