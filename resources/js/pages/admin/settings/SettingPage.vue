@@ -157,6 +157,53 @@
                 </div>
             </div>
         </div>
+        <div class="card">
+            <h5 class="mb-5">App Settings</h5>
+
+            <div>
+                <FileUpload
+                    mode="basic"
+                    accept="image/*"
+                    customUpload
+                    :maxFileSize="2048000"
+                    chooseLabel="Choose Logo"
+                    @change="uploadLogo"
+                    ref="logoUploader"
+                    class="m-0"
+                />
+            </div>
+            <div class="field mt-5">
+                <label
+                    for="color"
+                    :class="[{ 'float-right': $store.getters.isRtl }]"
+                    class="mr-4"
+                    >Application Primary Color</label
+                >
+                <InputText
+                    id="color"
+                    v-model.trim="color"
+                    required="true"
+                    type="color"
+                    class="w-full"
+                    :class="[
+                        { 'p-invalid': submitted && !color },
+                        { 'text-right': $store.getters.isRtl },
+                    ]"
+                />
+                <small class="p-invalid" v-if="submitted && color">
+                    Color Is Required
+                </small>
+            </div>
+            <div>
+                <Button
+                    icon="pi pi-check"
+                    label="Submit Settings"
+                    class="p-mt-2 m-0"
+                    @click.prevent="updateSettings"
+                    :disabled="loading"
+                />
+            </div>
+        </div>
     </div>
 </template>
 
@@ -178,6 +225,8 @@ export default {
             image: null,
             loading: false,
             submitted: false,
+            color: "",
+            logoImage: null,
         };
     }, // end of data
 
@@ -207,6 +256,29 @@ export default {
                     this.loading = false;
                 });
         }, // end of fill
+        fillSettings() {
+            this.loading = true;
+            axios
+                .get("/api/admin/settings")
+                .then((response) => {
+                    console.log(response.data);
+                    this.color = response.data.settings.color;
+
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        this.toast.add({
+                            severity: "error",
+                            summary: "Error",
+                            detail: error.response.data.message,
+                            life: 15000,
+                        });
+                    }
+                })
+                .then(() => {
+                    this.loading = false;
+                });
+        }, // end of fill
         formatKeywords() {
             let stringedKeywords = "";
             this.keywords.forEach((keyword) => {
@@ -220,7 +292,10 @@ export default {
             if (!this.$refs.fileUploader.files[0]) return;
             this.image = this.$refs.fileUploader.files[0];
         }, // end of onUpload
-
+        uploadLogo() {
+            if (!this.$refs.logoUploader.files[0]) return;
+            this.logoImage = this.$refs.logoUploader.files[0];
+        }, // end of onUpload
         updateSeo() {
             this.submitted = true;
             if (
@@ -268,6 +343,46 @@ export default {
                     });
             }
         }, // end of updateSeo
+        updateSettings(){
+            this.submitted = true;
+            if (
+                this.color
+            ) {
+                this.loading = true;
+                const formData = new FormData();
+                formData.append("color", this.color);
+                if (this.logoImage) formData.append("image", this.logoImage);
+                formData.append("_method", "PUT");
+                axios
+                    .post("/api/admin/settings/1", formData, {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    })
+                    .then((response) => {
+                        this.toast.add({
+                            severity: "success",
+                            summary: "Success",
+                            detail: response.data.message,
+                            life: 3000,
+                        });
+                    })
+                    .catch((error) => {
+                        if (error.response) {
+                            this.toast.add({
+                                severity: "error",
+                                summary: "Error",
+                                detail: error.response.data.message,
+                                life: 15000,
+                            });
+                        }
+                    })
+                    .then(() => {
+                        this.loading = false;
+                        this.submitted = false;
+                    });
+            }
+        }
     }, // end of methods
 
     beforeMount() {
@@ -276,6 +391,8 @@ export default {
 
     mounted() {
         this.fill();
+        this.fillSettings();
+
     }, // end of mounted
 };
 </script>
