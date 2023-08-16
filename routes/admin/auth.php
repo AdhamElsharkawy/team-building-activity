@@ -19,7 +19,7 @@ Route::group(['as' => 'admin.'], function () {
     Route::post('register', [RegisteredUserController::class, 'store']);
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
-        ->name('login');
+        ->name('creat');  //  need to edit
 
     Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login');
 
