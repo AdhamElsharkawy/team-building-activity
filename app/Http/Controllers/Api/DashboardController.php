@@ -15,11 +15,13 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $teams = Team::select('id', 'name', 'image', 'color')->with('levels.evaluations.criteria')->get();
+        $teams = Team::with(['levels' => function ($q){
+            $q->with(['evaluations' => function ($q){
+                $q->with('criteria');
+            }]);
+        }])->orderBy('score', 'DESC')->get();
 
         $teams = $this->hideUnnecessaryData($teams);
-
-        $teams = $teams->sortByDesc('score')->values()->all();
         $seo = Seo::first();
         return $this->apiSuccessResponse(
             ["teams" => $teams],
@@ -33,6 +35,10 @@ class DashboardController extends Controller
         $teams->makeHidden(["created_at", "updated_at", "image"]);
         $teams->each(function ($team) {
             $team->levels->makeHidden(["pivot", "created_at", "updated_at"]);
+            // append the score form the pivot table to the level
+            $team->levels->each(function ($level) {
+                $level->score = $level->pivot->score;
+            });
             $team->levels->first()->evaluations->makeHidden(["level_id"]);
             $team->levels->first()->evaluations->each(function ($evaluation) {
                 $evaluation->criteria->makeHidden(["evaluation_id"]);
