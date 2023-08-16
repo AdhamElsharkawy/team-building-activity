@@ -15,7 +15,7 @@ class TeamController extends Controller
     public function index()
     {
         // order by the score in the pivot table with levels
-        $teams = Team::select('id', 'name', 'image', 'color')->withCount('levels')->get();
+        $teams = Team::select('id', 'name', 'image', 'color', 'score')->withCount('levels')->get();
         $teams->makeHidden(["created_at", "updated_at", "image"]);
         $teams = $teams->sortByDesc('score')->values()->all();
         $seo = Seo::first();
@@ -41,6 +41,9 @@ class TeamController extends Controller
         if (!$team) return response()->json(["status" => "error", "message" => "Team not found"], 404);
 
         $team = $this->hideTeamUnnecessaryData($team);
+        $team->levels->each(function ($level) {
+            $level->score = $level->pivot->score;
+        });
 
         $seo = Seo::first();
         return $this->apiSuccessResponse(
@@ -53,7 +56,7 @@ class TeamController extends Controller
     private function hideTeamUnnecessaryData($team)
     {
         $team->makeHidden(["image"]);
-        $team->levels->makeHidden(["pivot","created_at", "updated_at"]);
+        $team->levels->makeHidden(["pivot", "created_at", "updated_at"]);
         $team->levels->each(function ($level) {
             $level->evaluations->each(function ($evaluation) {
                 $evaluation->makeHidden(["level_id", "created_at", "updated_at"]);
