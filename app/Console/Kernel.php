@@ -20,6 +20,8 @@ class Kernel extends ConsoleKernel
             Artisan::call('backup:run --only-db');
             $this->deleteOldBackups();
         })->daily();
+
+        $schedule->command('telescope:prune')->daily();
     } // end of schedule
 
     private function deleteOldBackups()

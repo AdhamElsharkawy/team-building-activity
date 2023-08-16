@@ -53,7 +53,7 @@ class TeamController extends Controller
     private function hideTeamUnnecessaryData($team)
     {
         $team->makeHidden(["image"]);
-        $team->levels->makeHidden(["pivot", "created_at", "updated_at"]);
+        $team->levels->makeHidden(["pivot","created_at", "updated_at"]);
         $team->levels->each(function ($level) {
             $level->evaluations->each(function ($evaluation) {
                 $evaluation->makeHidden(["level_id", "created_at", "updated_at"]);
@@ -88,6 +88,7 @@ class TeamController extends Controller
         // hide unnecessary data
         $team = $this->hideTeamUnnecessaryData($team);
         $team['level'] = $team->levels->first();
+        $team['level']['score'] = $team->levels->first()->pivot->score;
         $team->makeHidden(["levels"]);
 
         $seo = Seo::first();

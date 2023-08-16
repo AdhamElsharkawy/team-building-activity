@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('teams_criterias', function (Blueprint $table) {
             $table->id();
-            $table->decimal('score')->default(0);
+            $table->integer('score')->default(0);
             $table->foreignId('team_id')->constrained('teams')->onDelete('cascade');
             $table->foreignId('criteria_id')->constrained('criterias')->onDelete('cascade');
             $table->timestamps();
