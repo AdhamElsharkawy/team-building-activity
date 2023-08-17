@@ -14,54 +14,14 @@ class InformationController extends Controller
      */
     public function index()
     {
-        //
+        return ['information' => Information::first()];
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreInformationRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Information $information)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Information $information)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateInformationRequest $request, Information $information)
     {
-        //
-    }
+        $form_data = $request->validated();
+        $information->update($form_data);
+        return response(['message' => 'information updated successfully', 'information' => $information], 200);
+    } // end of update
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Information $information)
-    {
-        //
-    }
 }

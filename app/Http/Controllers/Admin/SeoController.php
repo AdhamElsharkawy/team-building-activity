@@ -25,8 +25,8 @@ class SeoController extends Controller
     {
         $form_data = $request->validated();
         // decode the title json data from the request and convert it to array
-        $form_data['title'] = json_decode($form_data['title'], true);
-        $form_data['description'] = json_decode($form_data['description'], true);
+        // $form_data['title'] = json_decode($form_data['title'], true);
+        // $form_data['description'] = json_decode($form_data['description'], true);
         //image uploading
         if ($request->image) {
             $seo->image ? $this->deleteImg($seo->image) : '';

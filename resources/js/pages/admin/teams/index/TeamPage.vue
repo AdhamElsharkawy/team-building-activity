@@ -44,8 +44,13 @@
                         <Button
                             label="Export"
                             icon="pi pi-upload"
-                            class="p-button-help"
+                            class="p-button-help mr-2"
                             @click="exportCSV($event)"
+                        />           
+                        <Button
+                            label="Reset All Score"
+                            class="p-button-danger"
+                            @click="resetAllScore"
                         />
                     </template>
                 </Toolbar>
@@ -61,9 +66,7 @@
 
                 <edit-team ref="editTeamComponent"></edit-team>
 
-                <show-team
-                    ref="showTeamComponent"
-                ></show-team>
+                <show-team ref="showTeamComponent"></show-team>
 
                 <create-team
                     ref="createTeamComponent"
@@ -93,12 +96,7 @@
                             class="p-button-text"
                             @click="deleteTeamsDialog = false"
                         />
-                        <Button
-                            label="Yes"
-                            icon="pi pi-check"
-                            class="p-button-text"
-                            @click="deleteSelectedTeams"
-                        />
+                        <Button label="Danger" severity="danger" />
                     </template>
                 </Dialog>
             </div>
@@ -112,6 +110,7 @@ import EditTeam from "../edit/EditTeam.vue";
 import ShowTeam from "../show/ShowTeam.vue";
 import CreateTeam from "../create/CreateTeam.vue";
 import { useToast } from "primevue/usetoast";
+
 
 export default {
     components: { TeamList, EditTeam, CreateTeam, ShowTeam },
@@ -167,7 +166,33 @@ export default {
                     this.deleteTeamsDialog = false;
                 });
         }, //end of deleteSelectedTeams
-
+        resetAllScore() {
+            this.loading = true;
+            // edit all score to zero
+            axios
+                .post("/api/admin/teams/score/reset")
+                .then((response) => {
+                    this.toast.add({ 
+                        severity: "success",
+                        summary: "Successful",
+                        detail: response.data.message,
+                        life: 3000,
+                    });
+                })
+                .catch((errors) => {
+                    if (errors.response) {
+                        this.toast.add({
+                            severity: "error",
+                            summary: "Error",
+                            detail: errors.response.data.message,
+                            life: 15000,
+                        });
+                    }
+                })
+                .then(() => {
+                    this.loading = false;
+                }); //end of axios request
+        }, //end of resetAllScore
         confirmDeleteSelected() {
             this.deleteTeamsDialog = true;
         }, //end of confirmDeleteSelected

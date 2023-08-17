@@ -11,7 +11,7 @@ class UpdateInformationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class UpdateInformationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'string', 'max:510'],
+            'content' => ['required', 'string', 'max:12750'],
         ];
     }
 }

@@ -78,7 +78,7 @@ class TeamController extends Controller
                 }]);
             }]);
         }]);
-        
+
         $team->levels->each(function ($level) {
             $level->evaluations->each(function ($evaluation) {
                 $evaluation->criteria->each(function ($criteria) {
@@ -88,7 +88,7 @@ class TeamController extends Controller
                 });
             });
         });
-        
+
         return response()->json(['team' => $team]);
     } // end of show
 
@@ -152,4 +152,36 @@ class TeamController extends Controller
         Team::whereIn('id', $request->teams)->delete();
         return response()->json(['message' => __('Teams Deleted Successfully')]);
     } // end of destroyAll
+
+
+
+    // Flush All Scores
+    public function destroyScore()
+    {
+        // for better performance
+        DB::transaction(function () {
+            DB::table('teams')->update(['score' => 0]);
+            DB::table('teams_levels')->update(['score' => 0]);
+            DB::table('teams_criterias')->update(['score' => 0]);
+        });
+
+        //        $teams = Team::with('levels', 'criteria')->get();
+        //        // Update in loop with eager loaded relations
+        //        foreach ($teams as $team) {
+        //            $team->score = 0;
+        //            $team->save();
+        //
+        //            foreach ($team->levels as $level) {
+        //                $level->pivot->score = 0;
+        //                $level->pivot->save();
+        //            }
+        //            foreach ($team->criteria as $criteria) {
+        //                $criteria->pivot->score = 0;
+        //                $criteria->pivot->save();
+        //            }
+        //
+        //        }
+
+        return response()->json(['message' => __('Scores Flushed Successfully')]);
+    } // end of destroyScore
 }
