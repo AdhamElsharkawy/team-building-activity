@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\InformationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SeoController;
 use App\Http\Controllers\Admin\TeamController;
@@ -19,6 +20,10 @@ Route::group(['middleware' => ['admin:sanctum'], 'as' => 'admin.'], function () 
     // teams
     Route::resource('teams', TeamController::class);
     Route::delete('teams/delete/many', [TeamController::class, 'destroyMany'])->name('teams.destroy.many');
+    // Flush Scores
+    Route::post('teams/score/reset', [TeamController::class, 'destroyScore'])->name('teams.destroy.score');
+
+
     // levels
     Route::resource('levels', LevelController::class)->except(['show', 'create']);
     Route::delete('levels/delete/many', [LevelController::class, 'destroyMany'])->name('levels.destroy.many');
@@ -26,4 +31,6 @@ Route::group(['middleware' => ['admin:sanctum'], 'as' => 'admin.'], function () 
     Route::resource('seos', SeoController::class)->only(['index', 'update']);
     //settings
     Route::resource('settings', SettingController::class)->only(['index', 'update']);
+    // information
+    Route::resource('informations', InformationController::class)->only(['index', 'update']);
 });

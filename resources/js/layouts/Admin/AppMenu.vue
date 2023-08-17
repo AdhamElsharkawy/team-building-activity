@@ -37,6 +37,12 @@ const model = ref([
                 icon: "pi pi-qrcode",
                 to: "/admin/levels",
                 name: "admin.levels",
+            },
+            {
+                label: "Info",
+                icon: "pi pi-info-circle",
+                to: "/admin/informations",
+                name: "admin.informations",
             }
         ],
     },
