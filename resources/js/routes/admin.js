@@ -37,6 +37,13 @@ const admin = [
         path: "settings",
         component: () => import("../pages/admin/settings/SettingPage.vue"),
     },
+    // informations
+    {
+        name: "admin.informations",
+        path: "informations",
+        component: () =>
+            import("../pages/admin/informations/InfoPage.vue"),
+    },
 ];
 
 export default admin;
