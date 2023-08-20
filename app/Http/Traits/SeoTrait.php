@@ -17,7 +17,7 @@ trait SeoTrait
             'url' => $url,
         ];*/
         $data = [
-            'title' => $title . ' | ' . env('APP_NAME'),
+            'title' => $title,
             'description' => $description,
             'keywords' => $keywords,
             'image' => asset('Logo.svg'),

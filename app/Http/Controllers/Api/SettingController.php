@@ -23,7 +23,7 @@ class SettingController extends Controller
                 "settings" => $settings,
                 "info" => $info
             ],
-            $this->seo('Settings', 'Settings-page', $seo->description, $seo->keywords),
+            $this->seo($seo->title, 'settings-page', $seo->description, $seo->keywords),
         );
     }
 }
