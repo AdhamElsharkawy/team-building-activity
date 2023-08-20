@@ -18,7 +18,9 @@ class DashboardController extends Controller
             $q->with(['evaluations' => function ($q){
                 $q->with('criteria');
             }]);
-        }])->orderBy('score', 'DESC')->get();
+        }])
+        ->withCount('users')
+        ->orderBy('score', 'DESC')->get();
 
         $teams = $this->hideUnnecessaryData($teams);
         $seo = Seo::first();
