@@ -2,24 +2,28 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Information;
+use App\Models\Seo;
 use App\Models\Setting;
+use App\Models\Information;
+use App\Http\Traits\SeoTrait;
 use App\Http\Traits\GeneralTrait;
 use App\Http\Controllers\Controller;
 
 class SettingController extends Controller
 {
-    use GeneralTrait;
+    use GeneralTrait, SeoTrait;
 
     public function index()
     {
         $settings = Setting::first();
         $info = Information::first();
+        $seo = Seo::first();
         return $this->apiSuccessResponse(
-            ["settings" => $settings,
-            "info" => $info
+            [
+                "settings" => $settings,
+                "info" => $info
             ],
-            'Settings retreived successfully',
+            $this->seo('Settings', 'Settings-page', $seo->description, $seo->keywords),
         );
     }
 }
