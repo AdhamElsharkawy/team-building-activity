@@ -12,22 +12,18 @@
                             id="title"
                             v-model="title"
                             required="true"
-                            :placeholder="$t('title')"
+                            placeholder="title"
                             :class="{ 'p-invalid': submitted && !title }"
                         />
-                        <label for="title">{{ $t("title") }}</label>
+                        <label for="title">title</label>
                     </span>
                     <small class="p-invalid" v-if="submitted && !title">{{
-                        $t("titleIsRequired")
+                        titleIsRequired
                     }}</small>
                 </div>
 
                 <div class="field">
-                    <span class="">
-                        <label for="content">{{
-                            $t("content")
-                        }}</label>
-                    </span>
+                    <label for="content">content</label>
                     <span class="p-float-label">
                         <Editor
                             id="content"
@@ -39,12 +35,10 @@
                                 'border rounded-lg border-red-500':
                                     submitted && !content,
                             }"
-                            :placeholder="$t('content')"
+                            placeholder="content"
                         />
-                        <small
-                            class="p-invalid"
-                            v-if="submitted && !content"
-                            >{{ $t("contentIsRequired") }}</small
+                        <small class="p-invalid" v-if="submitted && !content">
+                            contentIsRequired</small
                         >
                     </span>
                 </div>
@@ -89,7 +83,6 @@ export default {
             axios
                 .get("/api/admin/informations")
                 .then((response) => {
-                    console.log(response.data.information);
                     this.title = response.data.information.title;
                     this.content = response.data.information.content;
                 })
@@ -110,10 +103,7 @@ export default {
 
         updateInfo() {
             this.submitted = true;
-            if (
-                this.title &&
-                this.content
-            ) {
+            if (this.title && this.content) {
                 this.loading = true;
                 const formData = new FormData();
                 formData.append("title", this.title);
