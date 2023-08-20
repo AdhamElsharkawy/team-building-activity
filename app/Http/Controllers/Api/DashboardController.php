@@ -7,7 +7,6 @@ use App\Http\Traits\GeneralTrait;
 use App\Http\Traits\SeoTrait;
 use App\Models\Seo;
 use App\Models\Team;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
