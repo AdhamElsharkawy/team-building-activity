@@ -71,9 +71,7 @@
 
                 <div class="field">
                     <span class="">
-                        <label for="description">{{
-                            $t("description")
-                        }}</label>
+                        <label for="description">{{ $t("description") }}</label>
                     </span>
                     <span class="p-float-label">
                         <Editor
@@ -95,7 +93,6 @@
                         >
                     </span>
                 </div>
-
 
                 <div class="field col-12 mt-4">
                     <span class="p-float-label">
@@ -199,7 +196,6 @@ export default {
                 .then((response) => {
                     console.log(response.data);
                     this.color = response.data.settings.color;
-
                 })
                 .catch((error) => {
                     if (error.response) {
@@ -234,18 +230,11 @@ export default {
         }, // end of onUpload
         updateSeo() {
             this.submitted = true;
-            if (
-                this.title &&
-                this.description &&
-                this.keywords.length > 0
-            ) {
+            if (this.title && this.description && this.keywords.length > 0) {
                 this.loading = true;
                 const formData = new FormData();
-                formData.append("title", JSON.stringify(this.title));
-                formData.append(
-                    "description",
-                    JSON.stringify(this.description)
-                );
+                formData.append("title", this.title);
+                formData.append("description", this.description);
                 formData.append("keywords", this.formatKeywords());
                 if (this.image) formData.append("image", this.image);
                 formData.append("_method", "PUT");
@@ -279,11 +268,9 @@ export default {
                     });
             }
         }, // end of updateSeo
-        updateSettings(){
+        updateSettings() {
             this.submitted = true;
-            if (
-                this.color
-            ) {
+            if (this.color) {
                 this.loading = true;
                 const formData = new FormData();
                 formData.append("color", this.color);
@@ -318,7 +305,7 @@ export default {
                         this.submitted = false;
                     });
             }
-        }
+        },
     }, // end of methods
 
     beforeMount() {
@@ -328,7 +315,6 @@ export default {
     mounted() {
         this.fill();
         this.fillSettings();
-
     }, // end of mounted
 };
 </script>
