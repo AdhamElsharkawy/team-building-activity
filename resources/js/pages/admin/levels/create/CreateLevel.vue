@@ -319,11 +319,16 @@ export default {
                         formData.append(key, this.level[key]);
                     } else {
                         for (let evaluation_key in this.level.evaluations) {
-                            for (let criteria_key in this.level.evaluations[evaluation_key].criteria) {
-                                for (let criteria in this.level.evaluations[evaluation_key].criteria[criteria_key]) {
+                            for (let criteria_key in this.level.evaluations[
+                                evaluation_key
+                            ].criteria) {
+                                for (let criteria in this.level.evaluations[
+                                    evaluation_key
+                                ].criteria[criteria_key]) {
                                     formData.append(
                                         `evaluations[${evaluation_key}][criteria][${criteria_key}][${criteria}]`,
-                                        this.level.evaluations[evaluation_key].criteria[criteria_key][criteria]
+                                        this.level.evaluations[evaluation_key]
+                                            .criteria[criteria_key][criteria]
                                     );
                                 }
                             }
@@ -371,7 +376,24 @@ export default {
         }, //end of openDialog
 
         hideDialog() {
-            this.level = {};
+            this.level = {
+                name: "",
+                color: "",
+                type: "",
+                order: "",
+                evaluations: [
+                    {
+                        name: "",
+                        criteria: [
+                            {
+                                name: "",
+                                weight: "",
+                                order: "",
+                            },
+                        ],
+                    },
+                ],
+            };
             this.submitted = false;
             this.newLevelDialog = false;
         }, //end of hideDialog
