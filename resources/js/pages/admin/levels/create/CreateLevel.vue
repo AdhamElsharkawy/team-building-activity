@@ -76,6 +76,7 @@
                         name="type"
                         value="score"
                         v-model="level.type"
+                        @click="level.evaluations = []"
                     />
                     <label for="type1">Score</label>
                 </div>
