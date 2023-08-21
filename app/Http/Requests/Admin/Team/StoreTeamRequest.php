@@ -22,7 +22,7 @@ class StoreTeamRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:teams,name',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'color' => 'required|string|max:255',
             'user_ids' => 'nullable|array|min:1|exists:users,id',

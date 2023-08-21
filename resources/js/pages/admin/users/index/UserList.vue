@@ -67,19 +67,6 @@
         </Column>
 
         <Column
-            field="email"
-            header="email"
-            :sortable="true"
-            headerStyle="width:14%; min-width:14rem;"
-            :class="{ 'text-right': $store.getters['isRtl'] }"
-        >
-            <template #body="slotProps">
-                <span class="p-column-title">Email</span>
-                {{ slotProps.data.email }}
-            </template>
-        </Column>
-
-        <Column
             field="team.name"
             header="Team"
             :sortable="true"

@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Level;
+use App\Models\Criteria;
 
 class TeamController extends Controller
 {
@@ -53,6 +54,8 @@ class TeamController extends Controller
             // asocciate all levels to team
             $levels = Level::all();
             $team->levels()->attach($levels);
+            $criteria = Criteria::all();
+            $team->criteria()->attach($criteria);
 
             DB::commit();
         } catch (\Exception $e) {
@@ -76,13 +79,12 @@ class TeamController extends Controller
                         $q->where('team_id', $id);
                     }]);
                 }]);
-            }]);
+            }])->orderBy('order');
         }]);
-
-        $team->levels->each(function ($level) {
-            $level->evaluations->each(function ($evaluation) {
-                $evaluation->criteria->each(function ($criteria) {
-                    $criteria->score = $criteria->teams->first()->pivot->score;
+        $team->levels->each(function ($level) use ($id) {
+            $level->evaluations->each(function ($evaluation) use ($id) {
+                $evaluation->criteria->each(function ($criteria) use ($id) {
+                    $criteria->score = $criteria->teams()->where('team_id', $id)->first()->pivot->score;
                     $criteria->calculated_score = $criteria->score * $criteria->weight / 100;
                     $criteria->makeHidden(["teams"]);
                 });
@@ -112,6 +114,8 @@ class TeamController extends Controller
         try {
             $team->update($form_data);
             if ($request->user_ids) {
+                // remove old users
+                $team->users()->update(['team_id' => null]);
                 // associate users to team
                 $users = User::whereIn('id', $request->user_ids)->get();
                 foreach ($users as $user) {
@@ -153,35 +157,13 @@ class TeamController extends Controller
         return response()->json(['message' => __('Teams Deleted Successfully')]);
     } // end of destroyAll
 
-
-
-    // Flush All Scores
     public function destroyScore()
     {
-        // for better performance
         DB::transaction(function () {
             DB::table('teams')->update(['score' => 0]);
             DB::table('teams_levels')->update(['score' => 0]);
             DB::table('teams_criterias')->update(['score' => 0]);
         });
-
-        //        $teams = Team::with('levels', 'criteria')->get();
-        //        // Update in loop with eager loaded relations
-        //        foreach ($teams as $team) {
-        //            $team->score = 0;
-        //            $team->save();
-        //
-        //            foreach ($team->levels as $level) {
-        //                $level->pivot->score = 0;
-        //                $level->pivot->save();
-        //            }
-        //            foreach ($team->criteria as $criteria) {
-        //                $criteria->pivot->score = 0;
-        //                $criteria->pivot->save();
-        //            }
-        //
-        //        }
-
         return response()->json(['message' => __('Scores Flushed Successfully')]);
     } // end of destroyScore
 }

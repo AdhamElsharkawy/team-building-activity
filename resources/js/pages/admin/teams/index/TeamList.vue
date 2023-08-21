@@ -75,7 +75,10 @@
         >
             <template #body="slotProps">
                 <span class="p-column-title">color</span>
-                {{ slotProps.data.color }}
+                <span
+                    :style="{ background: slotProps.data.color }"
+                    style="width: 2.5rem; height: 2.5rem; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 0.5rem;"
+                ></span>
             </template>
         </Column>
 
@@ -92,7 +95,7 @@
             </template>
         </Column>
 
-         <Column
+        <Column
             field="score"
             header="Score"
             :sortable="true"

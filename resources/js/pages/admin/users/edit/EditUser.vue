@@ -15,7 +15,7 @@
         />
 
         <div class="field text-center">
-            <div class="p-inputgroup">
+            <div class="p-inputgroup flex justify-content-center">
                 <div class="custom-file">
                     <FileUpload
                         mode="basic"
@@ -32,9 +32,7 @@
         </div>
 
         <div class="field">
-            <label
-                for="name"
-                :class="[{ 'float-right': $store.getters.isRtl }]"
+            <label for="name" :class="[{ 'float-right': $store.getters.isRtl }]"
                 >name</label
             >
             <InputText
@@ -55,41 +53,11 @@
 
         <div class="field">
             <label
-                for="email"
-                :class="[{ 'float-right': $store.getters.isRtl }]"
-                >email</label
-            >
-            <InputText
-                id="email"
-                v-model.trim="user.email"
-                required="true"
-                type="email"
-                :class="[
-                    { 'p-invalid': submitted && !user.email },
-                    { 'text-right': $store.getters.isRtl },
-                ]"
-            />
-            <small class="p-invalid" v-if="submitted && !user.email">
-                emailIsRequired
-            </small>
-        </div>
-
-        <div class="field">
-            <label
                 class="mb-3"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
                 >role</label
             >
             <div class="formgrid grid">
-                <div class="field-radiobutton col-4">
-                    <RadioButton
-                        id="role1"
-                        name="role"
-                        value="admin"
-                        v-model="user.role"
-                    />
-                    <label for="role1">admin</label>
-                </div>
                 <div class="field-radiobutton col-4">
                     <RadioButton
                         id="role2"
@@ -138,6 +106,8 @@
 import { useToast } from "primevue/usetoast";
 
 export default {
+    emits: ["updatedSuccessfully"],
+
     data() {
         return {
             user: {},
@@ -153,15 +123,16 @@ export default {
         updateUser() {
             this.submitted = true;
 
-            if (this.user.name && this.user.name.trim() && this.user.email) {
+            if (this.user.name && this.user.name.trim()) {
                 this.loading = true;
                 const formData = new FormData();
-                formData.append("name", this.user.name);
-                formData.append("email", this.user.email);
-                formData.append("role", this.user.role);
-                if (typeof this.user.image == "object") {
-                    formData.append("image", this.user.image);
+                for (let key in this.user) {
+                    if (key == "image_path" || key == "image") continue;
+                    if (this.user[key] !== null)
+                        formData.append(key, this.user[key]);
                 }
+                if (typeof this.user.image === "object")
+                    formData.append("image", this.user.image);
                 formData.append("_method", "PUT");
                 axios
                     .post("/api/admin/users/" + this.user.id, formData)
@@ -173,6 +144,7 @@ export default {
                             life: 3000,
                         });
                         this.hideDialog();
+                        this.$emit("updatedSuccessfully");
                     })
                     .catch((errors) => {
                         if (errors.response) {

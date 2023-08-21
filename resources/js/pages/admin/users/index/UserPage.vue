@@ -58,7 +58,10 @@
                     @deleteUser="fill"
                 ></user-list>
 
-                <edit-user ref="editUserComponent"></edit-user>
+                <edit-user
+                    ref="editUserComponent"
+                    @updatedSuccessfully="fill"
+                ></edit-user>
 
                 <create-user
                     ref="createUserComponent"
