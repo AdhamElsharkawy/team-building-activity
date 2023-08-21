@@ -64,14 +64,17 @@
 
         <Column
             field="color"
-            header="color"
+            header="Color"
             :sortable="true"
             headerStyle="width:14%; min-width:14rem;"
             :class="{ 'text-right': $store.getters['isRtl'] }"
         >
             <template #body="slotProps">
-                <span class="p-column-title">Color</span>
-                {{ slotProps.data.color }}
+                <span class="p-column-title">color</span>
+                <span
+                    :style="{ background: slotProps.data.color }"
+                    style="width: 2.5rem; height: 2.5rem; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 0.5rem;"
+                ></span>
             </template>
         </Column>
 
