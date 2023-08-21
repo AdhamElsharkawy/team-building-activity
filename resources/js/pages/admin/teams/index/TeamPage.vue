@@ -96,7 +96,12 @@
                             class="p-button-text"
                             @click="deleteTeamsDialog = false"
                         />
-                        <Button label="Danger" severity="danger" />
+                        <Button
+                            label="Yes"
+                            icon="pi pi-check"
+                            class="p-button-text"
+                            @click="deleteSelectedTeams"
+                        />
                     </template>
                 </Dialog>
             </div>
