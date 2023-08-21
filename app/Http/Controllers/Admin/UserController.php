@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,8 +18,10 @@ class UserController extends Controller
 
     public function index()
     {
-        return ['users' => User::where('email', '!=', 'super_admin@app.com')->with(['team'=>function($q){
-            $q->select('id','name');
+        return ['users' => User::where(function ($q) {
+            $q->where('email', '!=', 'super_admin@app.com')->orWhereNull('email');
+        })->with(['team' => function ($q) {
+            $q->select('id', 'name');
         }])->latest()->get()];
     } //end of index
 
@@ -28,7 +29,7 @@ class UserController extends Controller
     {
         //encrypt password
         $form_data = $request->except(['password', 'password_confirmation', 'image']);
-        $form_data['password'] = bcrypt($request->password);
+        $request->password ? $form_data['password'] = bcrypt($request->password) : '';
 
         //image uploading
         $request->image ? $form_data['image'] = $this->img($request->image, 'images/users/') : '';
@@ -38,12 +39,10 @@ class UserController extends Controller
         return response()->json(['message' => __('User Created Successfully')]);
     } //end of store
 
-
     public function edit(User $user)
     {
         return response()->json(['user' => $user]);
     } //end of edit
-
 
     public function update(UpdateUserRequest $request, User $user)
     {

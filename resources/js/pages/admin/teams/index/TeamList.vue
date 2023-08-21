@@ -102,7 +102,7 @@
             </template>
         </Column>
 
-         <Column
+        <Column
             field="score"
             header="Score"
             :sortable="true"

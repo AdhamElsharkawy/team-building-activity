@@ -7,8 +7,8 @@
         :modal="true"
         class="p-fluid"
     >
-        <div class="field text-center">
-            <div class="p-inputgroup">
+        <div class="field text-center ">
+            <div class="p-inputgroup flex justify-content-center">
                 <div class="custom-file">
                     <FileUpload
                         mode="basic"
@@ -42,26 +42,7 @@
                 >Name Is Required</small
             >
         </div>
-        <div class="field">
-            <label
-                for="email"
-                :class="[{ 'float-right': $store.getters.isRtl }]"
-                >Email"</label
-            >
-            <InputText
-                id="email"
-                v-model.trim="user.email"
-                required="true"
-                type="email"
-                :class="[
-                    { 'p-invalid': submitted && !user.email },
-                    { 'text-right': $store.getters.isRtl },
-                ]"
-            />
-            <small class="p-invalid" v-if="submitted && !user.email"
-                >Email Is Required
-            </small>
-        </div>
+
         <div class="field">
             <label
                 class="mb-3"
@@ -76,7 +57,7 @@
                         value="admin"
                         v-model="user.role"
                     />
-                    <label for="role1">Admin"</label>
+                    <label for="role1">Admin</label>
                 </div>
                 <div class="field-radiobutton col-4">
                     <RadioButton
@@ -98,8 +79,29 @@
                 </div>
             </div>
         </div>
+
+        <div class="field" v-if="user.role == 'admin'">
+            <label
+                for="email"
+                :class="[{ 'float-right': $store.getters.isRtl }]"
+                >Email</label
+            >
+            <InputText
+                id="email"
+                v-model.trim="user.email"
+                required="true"
+                type="email"
+                :class="[
+                    { 'p-invalid': submitted && !user.email },
+                    { 'text-right': $store.getters.isRtl },
+                ]"
+            />
+            <small class="p-invalid" v-if="submitted && !user.email"
+                >Email Is Required
+            </small>
+        </div>
         
-        <div class="field">
+        <div class="field" v-if="user.role == 'admin'">
             <label
                 for="password"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
@@ -124,7 +126,8 @@
                 PasswordIsRequired
             </small>
         </div>
-        <div class="field">
+
+        <div class="field" v-if="user.role == 'admin'">
             <label
                 for="password_confirmation"
                 :class="[{ 'float-right': $store.getters.isRtl }]"
@@ -214,10 +217,7 @@ export default {
             this.submitted = true;
             if (
                 this.user.name &&
-                this.user.name.trim() &&
-                this.user.email &&
-                this.user.password &&
-                this.user.password_confirmation
+                this.user.name.trim()
             ) {
                 this.loading = true;
                 const formData = new FormData();
