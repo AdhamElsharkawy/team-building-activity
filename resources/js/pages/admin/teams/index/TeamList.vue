@@ -77,7 +77,14 @@
                 <span class="p-column-title">color</span>
                 <span
                     :style="{ background: slotProps.data.color }"
-                    style="width: 2.5rem; height: 2.5rem; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 0.5rem;"
+                    style="
+                        width: 2.5rem;
+                        height: 2.5rem;
+                        border-radius: 50%;
+                        display: inline-block;
+                        vertical-align: middle;
+                        margin-right: 0.5rem;
+                    "
                 ></span>
             </template>
         </Column>
@@ -115,21 +122,23 @@
             class="text-center"
         >
             <template #body="slotProps">
-                <Button
-                    icon="pi pi-eye"
-                    class="p-button-rounded p-button-secondary mx-2"
-                    @click="showTeam(slotProps.data)"
-                />
-                <Button
-                    icon="pi pi-pencil"
-                    class="p-button-rounded p-button-success mx-2"
-                    @click="editTeam(slotProps.data)"
-                />
-                <Button
-                    icon="pi pi-trash"
-                    class="p-button-rounded p-button-warning mx-2"
-                    @click="confirmDeleteTeam(slotProps.data)"
-                />
+                <div class="flex">
+                    <Button
+                        icon="pi pi-eye"
+                        class="p-button-rounded p-button-secondary mx-2"
+                        @click="showTeam(slotProps.data)"
+                    />
+                    <Button
+                        icon="pi pi-pencil"
+                        class="p-button-rounded p-button-success mx-2"
+                        @click="editTeam(slotProps.data)"
+                    />
+                    <Button
+                        icon="pi pi-trash"
+                        class="p-button-rounded p-button-warning mx-2"
+                        @click="confirmDeleteTeam(slotProps.data)"
+                    />
+                </div>
             </template>
         </Column>
     </DataTable>
