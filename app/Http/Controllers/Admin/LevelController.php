@@ -17,7 +17,7 @@ class LevelController extends Controller
     public function index()
     {
         $levels = Level::orderBy('order')->get();
-       
+
         return response()->json([
             'levels' => $levels,
         ]);
@@ -32,6 +32,9 @@ class LevelController extends Controller
         if ($request->type === 'score') {
             $level = Level::create($form_data);
         } else if ($request->type === 'evaluation') {
+            if ($this->checkCriteriaWeights($request)) {
+                return $this->checkCriteriaWeights($request);
+            }
             $level = Level::create($form_data);
             $this->storeEvaluations($request, $level);
         } else {
@@ -47,6 +50,26 @@ class LevelController extends Controller
             'level' => $level,
         ]);
     } // end of store
+
+    /**
+     * Check if criteria weights are valid.
+     */
+    private function checkCriteriaWeights($request)
+    {
+        $evaluations_form_data = $request->evaluations;
+        foreach ($evaluations_form_data as $evaluation_form_data) {
+            $criteria_form_data = $evaluation_form_data['criteria'];
+            $total_weight = 0;
+            foreach ($criteria_form_data as $criterion_form_data) {
+                $total_weight += $criterion_form_data['weight'];
+            }
+            if ($total_weight !== 100) {
+                return response()->json([
+                    'message' => __('Criteria weights must add up to 100'),
+                ], 422);
+            }
+        }
+    } // end of checkCriteriaWeights
 
     /**
      * Store evaluations and criteria for a level.
@@ -72,8 +95,10 @@ class LevelController extends Controller
     private function associateTeams(Level $level)
     {
         $teams = Team::all();
+        $criteria = $level->evaluations->flatMap->criteria;
         foreach ($teams as $team) {
             $team->levels()->attach($level->id);
+            $team->criteria()->attach($criteria->pluck('id')->toArray());
         }
     } // end of associateTeams
 
@@ -98,6 +123,9 @@ class LevelController extends Controller
             if ($level->type === 'evaluation') $level->evaluations()->delete();
             $level->update($form_data);
         } else if ($request->type === 'evaluation') {
+            if ($this->checkCriteriaWeights($request)) {
+                return $this->checkCriteriaWeights($request);
+            }
             $level->update($form_data);
             $this->updateEvaluations($request, $level);
         } else {

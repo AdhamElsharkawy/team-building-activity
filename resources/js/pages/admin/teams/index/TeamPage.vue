@@ -46,10 +46,13 @@
                             icon="pi pi-upload"
                             class="p-button-help mr-2"
                             @click="exportCSV($event)"
-                        />           
+                        />
                         <Button
                             label="Reset All Score"
-                            class="p-button-danger"
+                            icon="pi pi-refresh"
+                            severity="secondary"
+                            outlined
+                            class="mr-2"
                             @click="resetAllScore"
                         />
                     </template>
@@ -64,7 +67,10 @@
                     @deleteTeam="fill"
                 ></team-list>
 
-                <edit-team ref="editTeamComponent"></edit-team>
+                <edit-team
+                    ref="editTeamComponent"
+                    @updatedSuccessfully="fill"
+                ></edit-team>
 
                 <show-team ref="showTeamComponent"></show-team>
 
@@ -96,7 +102,12 @@
                             class="p-button-text"
                             @click="deleteTeamsDialog = false"
                         />
-                        <Button label="Danger" severity="danger" />
+                        <Button
+                            label="Yes"
+                            icon="pi pi-check"
+                            class="p-button-text"
+                            @click="deleteSelectedTeams"
+                        />
                     </template>
                 </Dialog>
             </div>
@@ -110,7 +121,6 @@ import EditTeam from "../edit/EditTeam.vue";
 import ShowTeam from "../show/ShowTeam.vue";
 import CreateTeam from "../create/CreateTeam.vue";
 import { useToast } from "primevue/usetoast";
-
 
 export default {
     components: { TeamList, EditTeam, CreateTeam, ShowTeam },
@@ -172,7 +182,7 @@ export default {
             axios
                 .post("/api/admin/teams/score/reset")
                 .then((response) => {
-                    this.toast.add({ 
+                    this.toast.add({
                         severity: "success",
                         summary: "Successful",
                         detail: response.data.message,

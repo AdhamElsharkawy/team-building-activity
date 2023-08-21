@@ -14,6 +14,29 @@
             class="mt-0 mx-auto mb-5 block shadow-2"
         />
 
+        <div class="field text-center">
+            <div class="p-inputgroup flex justify-content-center">
+                <div class="custom-file">
+                    <FileUpload
+                        mode="basic"
+                        accept="image/*"
+                        customUpload
+                        :maxFileSize="2048000"
+                        chooseLabel="Choose Image"
+                        @change="uploadImage"
+                        ref="fileUploader"
+                        class="m-0"
+                    />
+                </div>
+            </div>
+            <small
+                class="p-invalid text-red-600"
+                v-if="submitted && !team.image"
+            >
+                Image Is Required
+            </small>
+        </div>
+
         <div class="field">
             <label for="name" :class="[{ 'float-right': $store.getters.isRtl }]"
                 >Name</label
@@ -99,6 +122,8 @@
 import { useToast } from "primevue/usetoast";
 
 export default {
+    emits: ["updatedSuccessfully"],
+
     data() {
         return {
             team: {},
@@ -110,9 +135,19 @@ export default {
     }, //end of data
 
     methods: {
+        uploadImage() {
+            if (!this.$refs.fileUploader.files[0]) return;
+            this.team.image = this.$refs.fileUploader.files[0];
+        }, //end of uploadImage
+
         updateTeam() {
             this.submitted = true;
-            if (this.team.name && this.team.name.trim() && this.team.color && this.selectedUsers) {
+            if (
+                this.team.name &&
+                this.team.name.trim() &&
+                this.team.color &&
+                this.selectedUsers
+            ) {
                 this.loading = true;
                 const formData = new FormData();
                 formData.append("name", this.team.name);
@@ -120,6 +155,8 @@ export default {
                 for (let i = 0; i < this.selectedUsers.length; i++) {
                     formData.append("user_ids[]", this.selectedUsers[i].id);
                 }
+                if (typeof this.team.image === "object")
+                    formData.append("image", this.team.image);
                 formData.append("_method", "PUT");
 
                 axios
@@ -132,6 +169,7 @@ export default {
                             life: 3000,
                         });
                         this.hideDialog();
+                        this.$emit("updatedSuccessfully");
                     })
                     .catch((errors) => {
                         if (errors.response) {
