@@ -71,6 +71,7 @@
             <div class="formgrid grid">
                 <div class="field-radiobutton col-4">
                     <RadioButton
+                        @click="level.evaluations = []"
                         id="type1"
                         name="type"
                         value="score"
