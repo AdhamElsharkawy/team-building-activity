@@ -24,6 +24,11 @@ export default {
 }
 </style>
 <style lang="scss">
+input[type="color"] {
+    height: 3.2rem;
+    padding: 0;
+    border: none;
+}
 .text-right {
     * {
         font-family: "Almarai", sans-serif;
@@ -36,5 +41,4 @@ export default {
     display: flex !important;
     flex-direction: column !important;
 }
-
 </style>
