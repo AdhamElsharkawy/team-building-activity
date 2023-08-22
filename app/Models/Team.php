@@ -28,8 +28,8 @@ class Team extends Model
     } // end of getImagePathAttribute
     
     public function getScoreAttribute($value){
-        return ceil($value);
-    }
+        return $value * 100;
+} // end of getScoreAttribute
 
     public function users()
     {
