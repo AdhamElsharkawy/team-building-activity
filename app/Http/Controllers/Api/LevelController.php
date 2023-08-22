@@ -101,8 +101,8 @@ class LevelController extends Controller
             $team = Team::find($team['id']);
             if (!$team) return response()->json(["status" => "error", "message" => "Team not found"], 404);
             if ($level->type == 'score' && isset($teams[$team_index]['score'])) {
-                
                 $level->teams()->updateExistingPivot($team->id, ['score' => $teams[$team_index]['score']]);
+                $team->update(['score' => $team->levels()->sum('score')]);
             } else if ($level->type == 'evaluation' && isset($teams[$team_index]['evaluations'])) {
                 $evaluations = $teams[$team_index]['evaluations'];
                 $score = 0;
@@ -119,7 +119,7 @@ class LevelController extends Controller
                     }
                     $score += $evaluation_score;
                 }
-                $level->teams()->updateExistingPivot($team->id, ['score' => $score*100]);
+                $level->teams()->updateExistingPivot($team->id, ['score' => $score]);
                 // update the team overall score
                 $team->update(['score' => $team->levels()->sum('score')]);
             } else {

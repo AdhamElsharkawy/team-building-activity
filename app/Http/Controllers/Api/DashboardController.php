@@ -38,7 +38,7 @@ class DashboardController extends Controller
             $team->levels->makeHidden(["pivot", "created_at", "updated_at"]);
             // append the score form the pivot table to the level
             $team->levels->each(function ($level) {
-                $level->score = $level->pivot->score;
+                $level->score = ceil($level->pivot->score);
             });
             $team->levels->first()->evaluations->makeHidden(["level_id"]);
             $team->levels->first()->evaluations->each(function ($evaluation) {

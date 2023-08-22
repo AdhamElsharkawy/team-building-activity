@@ -26,6 +26,10 @@ class Team extends Model
     {
         return asset($this->image);
     } // end of getImagePathAttribute
+    
+    public function getScoreAttribute($value){
+        return ceil($value);
+    }
 
     public function users()
     {
