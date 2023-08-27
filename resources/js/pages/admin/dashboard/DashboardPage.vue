@@ -126,7 +126,7 @@
                                         class="pi pi-check-circle text-green-500"
                                     ></i>
                                 </td>
-                                <td>Level : {{ index + 1 }}</td>
+                                <td>{{ index + 1 }}</td>
                                 <td>{{ levels.type }}</td>
                                 <td>{{ levels.pivot.score }}</td>
                             </tr>
