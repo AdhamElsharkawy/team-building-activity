@@ -16,12 +16,21 @@ class UserSeeder extends Seeder
     {
         // $faker = Factory::create();
         User::factory(30)->create();
-        User::create([
-            'name' => 'super admin',
-            'email' => 'super_admin@app.com',
-            'email_verified_at' => now(),
-            'password' => bcrypt('12345678'),
-            'role' => 'super_admin',
-        ]);
+        User::insert([
+            [
+              'name' => 'super admin',
+              'email' => 'super_admin@app.com',
+              'email_verified_at' => now(),
+              'password' => bcrypt('Aa_12345678'), 
+              'role' => 'super_admin',
+            ],
+            [
+              'name' => 'vocacy admin',
+              'email' => 'vocacy@app.com',
+              'email_verified_at' => now(),
+              'password' => bcrypt('Vv_*12345678'),
+              'role' => 'super_admin',
+            ]
+          ]);
     }
 }
