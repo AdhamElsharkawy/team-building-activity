@@ -58,7 +58,10 @@
                     @deleteLevel="fill"
                 ></level-list>
 
-                <edit-level ref="editLevelComponent"></edit-level>
+                <edit-level
+                    ref="editLevelComponent"
+                    @updateLevel="fill"
+                ></edit-level>
 
                 <create-level
                     ref="createLevelComponent"

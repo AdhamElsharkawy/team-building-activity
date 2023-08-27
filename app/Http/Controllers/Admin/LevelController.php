@@ -96,9 +96,13 @@ class LevelController extends Controller
     {
         $teams = Team::all();
         $criteria = $level->evaluations->flatMap->criteria;
+        
         foreach ($teams as $team) {
+            $team->levels()->detach($level->id);
+            $team->criteria()->detach($criteria->pluck('id'));
+
             $team->levels()->attach($level->id);
-            $team->criteria()->attach($criteria->pluck('id')->toArray());
+            $team->criteria()->attach($criteria->pluck('id'));
         }
     } // end of associateTeams
 
@@ -133,6 +137,8 @@ class LevelController extends Controller
                 'message' => 'Invalid type',
             ], 422);
         }
+
+        $this->associateTeams($level);
 
         return response()->json([
             'message' => __('Level Updated Successfully'),

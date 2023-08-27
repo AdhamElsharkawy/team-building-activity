@@ -94,7 +94,7 @@ export default {
                 >
                     <div class="text-center mb-5">
                         <div class="text-900 text-3xl font-medium mb-3">
-                            Welcome, Asa7bi!
+                            Welcome
                         </div>
                         <span class="text-600 font-medium"
                             >Sign in to continue</span

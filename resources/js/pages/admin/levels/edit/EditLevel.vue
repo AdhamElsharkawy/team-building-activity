@@ -276,6 +276,8 @@
 import { useToast } from "primevue/usetoast";
 
 export default {
+    emits: ["updateLevel"],
+
     data() {
         return {
             level: {
@@ -356,6 +358,7 @@ export default {
                             life: 3000,
                         });
                         this.hideDialog();
+                        this.$emit("updateLevel");
                     })
                     .catch((errors) => {
                         if (errors.response) {
