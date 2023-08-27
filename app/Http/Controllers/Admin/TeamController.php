@@ -91,11 +91,11 @@ class TeamController extends Controller
             });
         });
 
-        // foreach ($team->levels as $level) {
-        //     if ($level->type == "score"){
-        //         $level->score = $level->teams()->where('team_id', $id)->first()->pivot->score * 100;
-        //     }
-        // }
+        foreach ($team->levels as $level) {
+            if ($level->type == "score"){
+                $level->score = $level->teams()->where('team_id', $id)->first()->pivot->score * 100;
+            }
+        }
 
         return response()->json(['team' => $team]);
     } // end of show
