@@ -119,7 +119,7 @@ class LevelController extends Controller
                     }
                     $score += $evaluation_score;
                 }
-                $level->teams()->updateExistingPivot($team->id, ['score' => $score]);
+                $level->teams()->updateExistingPivot($team->id, ['score' => $score * 100]);
                 // update the team overall score
                 $team->update(['score' => $team->levels()->sum('score')]);
             } else {

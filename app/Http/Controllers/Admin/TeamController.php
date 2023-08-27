@@ -85,11 +85,17 @@ class TeamController extends Controller
             $level->evaluations->each(function ($evaluation) use ($id) {
                 $evaluation->criteria->each(function ($criteria) use ($id) {
                     $criteria->score = $criteria->teams()->where('team_id', $id)->first()->pivot->score;
-                    $criteria->calculated_score = $criteria->score * $criteria->weight / 100;
+                    $criteria->calculated_score = $criteria->score * $criteria->weight;
                     $criteria->makeHidden(["teams"]);
                 });
             });
         });
+
+        // foreach ($team->levels as $level) {
+        //     if ($level->type == "score"){
+        //         $level->score = $level->teams()->where('team_id', $id)->first()->pivot->score * 100;
+        //     }
+        // }
 
         return response()->json(['team' => $team]);
     } // end of show
