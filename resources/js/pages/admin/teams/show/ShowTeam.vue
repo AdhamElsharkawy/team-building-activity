@@ -41,7 +41,6 @@
                             :header="tab.name"
                         >
                             <div v-if="tab.type == 'score'">
-                                <!-- <span>The team scored: </span> {{ tab.pivot.score }} -->
                                 <div class="flex flex-col md:flex-row">
                                     <div
                                         class="flex flex-col text-center w-full"
@@ -50,13 +49,12 @@
                                             Score:
                                         </h2>
                                         <h3 class="text-lg font-bold">
-                                            {{ tab.pivot.score }}
+                                            {{ tab.score }}
                                         </h3>
                                     </div>
                                 </div>
                             </div>
                             <div v-else-if="tab.type == 'evaluation'">
-                                <!-- firts get the score from the pivot list the evaluations then list insider criteria with ther score -->
                                 <div class="flex flex-col md:flex-row">
                                     <div
                                         class="flex flex-col text-center w-full"
@@ -65,7 +63,7 @@
                                             Score:
                                         </h2>
                                         <h3 class="text-lg font-bold">
-                                            {{ tab.pivot.score }}
+                                            {{ tab.score }}
                                         </h3>
                                     </div>
                                 </div>
