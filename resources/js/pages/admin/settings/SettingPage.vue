@@ -16,6 +16,40 @@
                     class="m-0"
                 />
             </div>
+
+            <div class="field mt-5">
+                <div>
+                    <FileUpload
+                        name="sound_1"
+                        mode="basic"
+                        chooseLabel="Choose Winner Sound"
+                        :customUpload="true"
+                        ref="file1"
+                        @change="uploadAudio(1)"
+                    />
+                </div>
+                <div class="mt-5">
+                    <FileUpload
+                        name="sound_2"
+                        chooseLabel="Choose score tracker up Sound"
+                        mode="basic"
+                        :customUpload="true"
+                        ref="file2"
+                        @change="uploadAudio(2)"
+                    />
+                </div>
+                <div class="mt-5">
+                    <FileUpload
+                        name="sound_3"
+                        chooseLabel="Choose score tracker down Sound"
+                        mode="basic"
+                        :customUpload="true"
+                        ref="file3"
+                        @change="uploadAudio(3)"
+                    />
+                </div>
+            </div>
+
             <div class="field mt-5">
                 <label
                     for="color"
@@ -161,6 +195,9 @@ export default {
             loading: false,
             submitted: false,
             color: "",
+            audio1: null,
+            audio2: null,
+            audio3: null,
             logoImage: null,
         };
     }, // end of data
@@ -268,6 +305,20 @@ export default {
                     });
             }
         }, // end of updateSeo
+        uploadAudio(fileNum) {
+            if (fileNum === 1) {
+                if (!this.$refs.file1.files[0]) return;
+                this.audio1 = this.$refs.file1.files[0];
+            }
+            if (fileNum === 2) {
+                if (!this.$refs.file2.files[0]) return;
+                this.audio2 = this.$refs.file2.files[0];
+            }
+            if (fileNum === 3) {
+                if (!this.$refs.file3.files[0]) return;
+                this.audio3 = this.$refs.file3.files[0];
+            }
+        }, // end of onUpload
         updateSettings() {
             this.submitted = true;
             if (this.color) {
@@ -275,6 +326,9 @@ export default {
                 const formData = new FormData();
                 formData.append("color", this.color);
                 if (this.logoImage) formData.append("image", this.logoImage);
+                this.audio1 ? formData.append("sound_1", this.audio1) : null ;
+                this.audio2 ? formData.append("sound_2", this.audio2) : null ;
+                this.audio3 ? formData.append("sound_3", this.audio3) : null ;
                 formData.append("_method", "PUT");
                 axios
                     .post("/api/admin/settings/1", formData, {
