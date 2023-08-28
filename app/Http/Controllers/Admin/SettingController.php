@@ -25,7 +25,7 @@ class SettingController extends Controller
 
     public function uploadAudio($audio, $path ,$old_file = 'test.mp3')
     {
-        $audio_name = time() . '.' . $audio->getClientOriginalExtension();
+        $audio_name = time() . '_' .uniqid(). '.'. $audio->getClientOriginalExtension();
         $publicPath = public_path($path);
         if (!File::isDirectory($publicPath)) {
             File::makeDirectory($publicPath, 0777, true, true);
