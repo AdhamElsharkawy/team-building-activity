@@ -21,19 +21,19 @@ const model = ref([
         label: $t('collections'),
         items: [
             {
-                label: "users",
+                label: "Users",
                 icon: "pi pi-user",
                 to: "/admin/users",
                 name: "admin.users",
             },
             {
-                label: "teams",
+                label: "Teams",
                 icon: "pi pi-users",
                 to: "/admin/teams",
                 name: "admin.teams",
             },
             {
-                label: "levels",
+                label: "Levels",
                 icon: "pi pi-qrcode",
                 to: "/admin/levels",
                 name: "admin.levels",
@@ -50,7 +50,7 @@ const model = ref([
 </script>
 
 <template>
-    <ul class="layout-menu">
+    <ul class="layout-menu" style="font-size: 1.2rem;">
         <template v-for="(item, i) in model" :key="item">
             <app-menu-item
                 v-if="!item.separator"
