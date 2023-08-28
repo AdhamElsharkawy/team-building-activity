@@ -107,7 +107,7 @@
                             class="my-3 mx-0 border-top-1 border-none surface-border"
                         />
                         <table>
-                            <thead class="text-center">
+                            <thead class="text-center border-b border-gray-200 dark:border-gray-700">
                                 <th>
                                     <i
                                         class="pi pi-check-circle text-green-500"
@@ -166,7 +166,6 @@ export default {
                     this.levels_count = response.data.levels_count;
                     this.teams_count = response.data.teams_count;
                     this.teams = response.data.teams;
-                    console.log(this.teams);
                 })
                 .catch((error) => {
                     if (error.response) {
