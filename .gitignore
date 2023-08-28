@@ -5,6 +5,7 @@
 /public/build
 /public/hot
 /public/storage
+/public/sounds
 /storage/*.key
 /vendor
 .env

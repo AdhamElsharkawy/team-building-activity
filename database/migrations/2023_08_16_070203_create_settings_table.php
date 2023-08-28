@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('image')->nullable();
             $table->string('color')->default('#000000');
+            $table->string('sound_1')->nullable();
+            $table->string('sound_2')->nullable();
+            $table->string('sound_3')->nullable();
+
             $table->timestamps();
         });
     }

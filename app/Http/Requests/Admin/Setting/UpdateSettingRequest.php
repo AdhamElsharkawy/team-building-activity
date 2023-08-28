@@ -24,6 +24,9 @@ class UpdateSettingRequest extends FormRequest
         return [
             'image' => ['nullable', 'image', 'max:2048'],
             'color' => 'required|string|max:255',
+            'sound_1' => ['nullable', 'mimes:mp3,mpga,wav', 'max:2048'],
+            'sound_2' => ['nullable', 'mimes:mp3,mpga,wav', 'max:2048'],
+            'sound_3' => ['nullable', 'mimes:mp3,mpga,wav', 'max:2048'],
         ];
     }
 }
