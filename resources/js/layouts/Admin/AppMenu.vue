@@ -38,12 +38,12 @@ const model = ref([
                 to: "/admin/levels",
                 name: "admin.levels",
             },
-            {
-                label: "Info",
-                icon: "pi pi-info-circle",
-                to: "/admin/informations",
-                name: "admin.informations",
-            }
+            // {
+            //     label: "Info",
+            //     icon: "pi pi-info-circle",
+            //     to: "/admin/informations",
+            //     name: "admin.informations",
+            // }
         ],
     },
 ]);
