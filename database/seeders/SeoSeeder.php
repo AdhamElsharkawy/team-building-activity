@@ -14,9 +14,9 @@ class SeoSeeder extends Seeder
     {
         Seo::updateOrCreate([
             'id' => 1,
-            'title' => 'Nortech Games',
-            'description' => 'Nortech Games',
-            'keywords' => 'Nortech, Games',
+            'title' => 'Team Games',
+            'description' => 'Team Games',
+            'keywords' => 'Team, Games',
             'image' => ''
         ]);
     }

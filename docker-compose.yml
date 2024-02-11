@@ -1,7 +1,7 @@
 version: '3'
 services:
-    nortech-back:
-        container_name: 'nortech-back'
+    app-back:
+        container_name: 'app-back'
         build:
             context: .
             dockerfile: Dockerfile
@@ -19,19 +19,19 @@ services:
             - '8007:80'
         environment:
             WWWUSER: 1000
-            nortech-back_SAIL: 1
+            app-back_SAIL: 1
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
         restart: unless-stopped
         volumes:
             - '.:/var/www/html'
         networks:
-            - nortech-back-net
+            - app-back-net
         depends_on:
-            - nortech-backDB
+            - app-backDB
 
-    nortech-backDB:
-        container_name: 'nortech-backDB'
+    app-backDB:
+        container_name: 'app-backDB'
         image: 'mysql/mysql-server:8.0'
         ports:
             - '3315:3306'
@@ -44,9 +44,9 @@ services:
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
         restart: unless-stopped
         volumes:
-            - 'nortech-back-mysql:/var/lib/mysql'
+            - 'app-back-mysql:/var/lib/mysql'
         networks:
-            - nortech-back-net
+            - app-back-net
         healthcheck:
             test:
                 - CMD
@@ -56,8 +56,8 @@ services:
             retries: 3
             timeout: 5s
 networks:
-    nortech-back-net:
+    app-back-net:
         driver: bridge
 volumes:
-    nortech-back-mysql:
+    app-back-mysql:
         driver: local
